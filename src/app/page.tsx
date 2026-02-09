@@ -1,17 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
+
+    // Validate that both fields are filled
+    if (email.trim() && password.trim()) {
+      // Navigate to dashboard
+      router.push("/dashboard");
+    }
   };
 
   return (
@@ -49,7 +57,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full"
+                className="w-qqfull"
                 required
               />
             </div>
@@ -85,6 +93,60 @@ export default function LoginPage() {
               Sign In
             </Button>
           </form>
+
+          {/* Social Login Section */}
+          <div className="w-full mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-neutral-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white/95 text-neutral-500">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-center gap-3">
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src="/assets/google.svg"
+                  alt="Google"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src="/assets/facebook.svg"
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src="/assets/apple.svg"
+                  alt="Apple"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
+            </div>
+          </div>
+
           <div className="mt-6 text-sm text-neutral-700 text-center">
             Don&apos;t have an account?{" "}
             <Link

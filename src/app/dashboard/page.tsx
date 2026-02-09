@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { JSX, useState, useEffect } from "react";
 import { RequireSession } from "@/components/app/RequireSession";
+import SideBar from "@/components/app/SideBar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,402 +12,424 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  useBrandsQuery,
-  useCommunitiesQuery,
-  useEventsQuery,
-  useMarkCommunityMessageReadMutation,
-  useMyCommunityMessagesQuery,
-  useMyMembershipsQuery,
-  useMyNotificationsQuery,
-  useMyRegistrationsQuery,
-  useMySubscriptionsQuery,
-  useSessionQuery,
-} from "@/hooks/useDummyApi";
-import type { Event } from "@/lib/dummy/types";
-import SideBar from "@/components/app/SideBar";
+  Home,
+  Gamepad2,
+  Gift,
+  Activity,
+  Calendar,
+  Bell,
+  Users,
+  Crown,
+  CreditCard,
+  TrendingUp,
+  Building2,
+  Settings,
+  UserCheck,
+  Plus,
+  History,
+  Cog,
+  BookOpen,
+  FolderOpen,
+  MessageSquare,
+  Mail,
+  Truck,
+  Package,
+  Star,
+  DollarSign,
+  ShoppingBag,
+  Tag,
+  Edit,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react";
 
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
+// Import actual page components
+import BusinessDashboardPage from "../business/page";
+import EventsPage from "../events/page";
+import CommunityDashboardPage from "../community/page";
+import BrandsPage from "../brands/page";
+import AgencyPage from "../agency/page";
+import OrganizerPage from "../organizer/page";
+import BusinessSetupPage from "../business/setup/page";
+import BusinessOverviewPage from "../business/overview/page";
+
+// Personal Account Content Components (keeping these as basic since no specific pages exist)
+function PersonalHomeContent() {
+  return (
+    <div className="p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold">Welcome Back!</h1>
+        <p className="text-muted-foreground">
+          Here&apos;s your personal dashboard overview
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Bell className="w-4 h-4" />
+              Notifications
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold">5</div>
+            <p className="text-sm text-muted-foreground">Unread messages</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Gift className="w-4 h-4" />
+              Reward Points
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold text-[#ff5f6d]">2,450</div>
+            <p className="text-sm text-muted-foreground">Ready to redeem</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Events
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold">3</div>
+            <p className="text-sm text-muted-foreground">Upcoming events</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }
 
-export default function PersonalDashboardPage() {
+function GamesContent() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-6">Games & Challenges</h1>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Daily Challenge</CardTitle>
+            <CardDescription>
+              Complete today&apos;s challenge to earn points
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold text-green-600 mb-2">
+              +50 XP
+            </div>
+            <Button className="w-full">Play Now</Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Weekly Streak</CardTitle>
+            <CardDescription>Keep your streak alive</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold text-blue-600 mb-2">
+              7 Days
+            </div>
+            <Button variant="outline" className="w-full">
+              View Progress
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Leaderboard</CardTitle>
+            <CardDescription>See how you rank</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold text-purple-600 mb-2">
+              #12
+            </div>
+            <Button variant="outline" className="w-full">
+              View Rankings
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function RewardsContent() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-6">Rewards & Points</h1>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Your Points</CardTitle>
+            <CardDescription>
+              Redeem points for exclusive rewards
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold text-[#ff5f6d] mb-4">2,450</div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-3 border rounded-lg">
+                <div>
+                  <div className="font-medium">10% Discount</div>
+                  <div className="text-sm text-muted-foreground">
+                    Any purchase
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">500 pts</div>
+                  <Button size="sm">Redeem</Button>
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-3 border rounded-lg">
+                <div>
+                  <div className="font-medium">Free Shipping</div>
+                  <div className="text-sm text-muted-foreground">
+                    Next order
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">750 pts</div>
+                  <Button size="sm">Redeem</Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Reward History</CardTitle>
+            <CardDescription>Your recent redemptions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2 border-b">
+                <div>
+                  <div className="font-medium">5% Discount Used</div>
+                  <div className="text-sm text-muted-foreground">
+                    2 days ago
+                  </div>
+                </div>
+                <Badge variant="secondary">-250 pts</Badge>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <div>
+                  <div className="font-medium">Daily Login Bonus</div>
+                  <div className="text-sm text-muted-foreground">
+                    3 days ago
+                  </div>
+                </div>
+                <Badge variant="outline">+100 pts</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// Wrapper components to extract content from actual page components
+function BusinessOverviewContent() {
+  return (
+    <div className="h-full w-full">
+      <BusinessOverviewPage />
+    </div>
+  );
+}
+
+function BusinessSetupContent() {
+  return (
+    <div className="h-full w-full">
+      <BusinessSetupPage />
+    </div>
+  );
+}
+
+function BusinessDashboardContent() {
+  return (
+    <div className="h-full w-full">
+      <BusinessDashboardPage />
+    </div>
+  );
+}
+
+function EventsContent() {
+  return (
+    <div className="h-full w-full">
+      <EventsPage />
+    </div>
+  );
+}
+
+function CommunityContent() {
+  return (
+    <div className="h-full w-full">
+      <CommunityDashboardPage />
+    </div>
+  );
+}
+
+function BrandsContent() {
+  return (
+    <div className="h-full w-full">
+      <BrandsPage />
+    </div>
+  );
+}
+
+function AgencyContent() {
+  return (
+    <div className="h-full w-full">
+      <AgencyPage />
+    </div>
+  );
+}
+
+function OrganizerContent() {
+  return (
+    <div className="h-full w-full">
+      <OrganizerPage />
+    </div>
+  );
+}
+
+// Generic Content Components for other sections
+function GenericContent({ title, icon: Icon }: { title: string; icon: any }) {
+  return (
+    <div className="p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Icon className="w-6 h-6 text-[#ff5f6d]" />
+        <h1 className="text-2xl font-semibold">{title}</h1>
+      </div>
+      <Card>
+        <CardContent className="py-10 text-center">
+          <Icon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground mb-4">
+            {title} content will be implemented here
+          </p>
+          <Button variant="outline">Coming Soon</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const [currentContent, setCurrentContent] = useState("/");
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+
+  // Content routing map
+  const contentMap: Record<string, () => JSX.Element> = {
+    // Personal Account
+    "/": () => <PersonalHomeContent />,
+    "/home": () => <PersonalHomeContent />,
+    "/games": () => <GamesContent />,
+    "/rewards": () => <RewardsContent />,
+    "/activity": () => <GenericContent title="Activity" icon={Activity} />,
+    "/events": () => <EventsContent />,
+    "/notifications": () => (
+      <GenericContent title="Notifications" icon={Bell} />
+    ),
+    "/community": () => <CommunityContent />,
+    "/memberships": () => <GenericContent title="Memberships" icon={Crown} />,
+    "/subscriptions": () => (
+      <GenericContent title="Subscriptions" icon={CreditCard} />
+    ),
+
+    // Business Account
+    "/business/overview": () => <BusinessOverviewContent />,
+    "/business/setup": () => <BusinessSetupContent />,
+    "/business/events": () => <EventsContent />,
+    "/brands": () => <BrandsContent />,
+    "/business/services": () => (
+      <GenericContent title="Services" icon={Settings} />
+    ),
+    "/business/subscribers": () => (
+      <GenericContent title="Subscribers" icon={UserCheck} />
+    ),
+    "/business/team": () => <GenericContent title="Team" icon={Users} />,
+    "/business/notifications/create": () => (
+      <GenericContent title="Create Notification" icon={Plus} />
+    ),
+    "/business/history": () => (
+      <GenericContent title="History" icon={History} />
+    ),
+    "/business/settings": () => <GenericContent title="Settings" icon={Cog} />,
+
+    // Community Account
+    "/community/overview": () => <CommunityContent />,
+    "/community/chapters": () => (
+      <GenericContent title="Chapters" icon={BookOpen} />
+    ),
+    "/community/members": () => <GenericContent title="Members" icon={Users} />,
+    "/community/directory": () => (
+      <GenericContent title="Directory" icon={FolderOpen} />
+    ),
+    "/community/message-board": () => (
+      <GenericContent title="Message Board" icon={MessageSquare} />
+    ),
+    "/community/message": () => <GenericContent title="Messages" icon={Mail} />,
+
+    // Event Organizer
+    "/event/overview": () => <OrganizerContent />,
+    "/event/vendors": () => <GenericContent title="Vendors" icon={Truck} />,
+    "/event/services": () => (
+      <GenericContent title="Event Services" icon={Settings} />
+    ),
+    "/event/team": () => <GenericContent title="Event Team" icon={Users} />,
+    "/event/settings": () => (
+      <GenericContent title="Event Settings" icon={Cog} />
+    ),
+
+    // Agency
+    "/agency/overview": () => <AgencyContent />,
+    "/agency/clients": () => <GenericContent title="Clients" icon={Users} />,
+    "/agency/services": () => (
+      <GenericContent title="Agency Services" icon={Settings} />
+    ),
+    "/agency/team": () => (
+      <GenericContent title="Agency Team" icon={UserCheck} />
+    ),
+    "/agency/settings": () => (
+      <GenericContent title="Agency Settings" icon={Cog} />
+    ),
+  };
+
+  // Navigate to content
+  const navigateToContent = (path: string) => {
+    setCurrentContent(path);
+  };
+
+  const renderContent = () => {
+    const ContentComponent = contentMap[currentContent] || contentMap["/"];
+    return <ContentComponent />;
+  };
+
   return (
     <RequireSession>
-      <div className="flex min-h-screen">
-        <SideBar />
-        <div className="flex-1">
-          <PersonalDashboardInner />
+      <div className="min-h-screen">
+        <SideBar
+          onNavigate={navigateToContent}
+          currentPath={currentContent}
+          expanded={sidebarExpanded}
+          onExpandedChange={setSidebarExpanded}
+        />
+        <div
+          className={`bg-gray-50 min-h-screen transition-all duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            sidebarExpanded ? "ml-64" : "ml-[4.5rem]"
+          }`}
+        >
+          {renderContent()}
         </div>
       </div>
     </RequireSession>
-  );
-}
-
-function PersonalDashboardInner() {
-  const { data: session } = useSessionQuery();
-  const [tab, setTab] = useState("home");
-
-  const brands = useBrandsQuery();
-  const communities = useCommunitiesQuery();
-  const events = useEventsQuery();
-
-  const subscriptions = useMySubscriptionsQuery(true);
-  const memberships = useMyMembershipsQuery(true);
-  const notifications = useMyNotificationsQuery(true);
-  const communityMessages = useMyCommunityMessagesQuery(true);
-  const registrations = useMyRegistrationsQuery(true);
-
-  const markRead = useMarkCommunityMessageReadMutation();
-
-  const brandNameById = useMemo(() => {
-    const map = new Map<string, string>();
-    (brands.data ?? []).forEach((b) => map.set(b.id, b.name));
-    return map;
-  }, [brands.data]);
-
-  const communityNameById = useMemo(() => {
-    const map = new Map<string, string>();
-    (communities.data ?? []).forEach((c) => map.set(c.id, c.name));
-    return map;
-  }, [communities.data]);
-
-  const eventById = useMemo(() => {
-    const map = new Map<string, Event>();
-    (events.data ?? []).forEach((e) => map.set(e.id, e));
-    return map;
-  }, [events.data]);
-
-  const pendingAlerts = (notifications.data ?? []).filter(
-    (n) => n.status === "pending",
-  );
-  const unreadCommunity = (communityMessages.data ?? []).filter(
-    (m) => !m.readAt,
-  );
-
-  return (
-    <div className="mx-auto max-w-6xl px-6 py-10">
-      <div className="mb-6 space-y-1">
-        <h1 className="text-2xl font-semibold">
-          Welcome back{session?.displayName ? `, ${session.displayName}` : ""}!
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          This dashboard shows the “end states” of the workflow: alerts,
-          community messages, and registrations.
-        </p>
-      </div>
-
-      <div className="mb-6 flex flex-wrap gap-3">
-        <Button asChild variant="secondary">
-          <Link href="/brands">Browse Brands</Link>
-        </Button>
-        <Button asChild variant="secondary">
-          <Link href="/events">Browse Events</Link>
-        </Button>
-      </div>
-
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
-          <TabsTrigger value="home">Home</TabsTrigger>
-          <TabsTrigger value="alerts">
-            Alerts{" "}
-            {pendingAlerts.length > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {pendingAlerts.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="community">
-            Community{" "}
-            {unreadCommunity.length > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {unreadCommunity.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="events">
-            Events{" "}
-            {(registrations.data?.length ?? 0) > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {registrations.data?.length ?? 0}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
-          <TabsTrigger value="memberships">Memberships</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="home" className="pt-6">
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Pending Alerts</CardTitle>
-                <CardDescription>
-                  Brand updates you haven’t handled yet.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-semibold">
-                  {pendingAlerts.length}
-                </div>
-                <Button
-                  className="mt-3"
-                  variant="outline"
-                  onClick={() => setTab("alerts")}
-                >
-                  View alerts
-                </Button>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  Unread Community Messages
-                </CardTitle>
-                <CardDescription>
-                  Announcements from communities you joined.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-semibold">
-                  {unreadCommunity.length}
-                </div>
-                <Button
-                  className="mt-3"
-                  variant="outline"
-                  onClick={() => setTab("community")}
-                >
-                  View inbox
-                </Button>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Event Registrations</CardTitle>
-                <CardDescription>Events you registered for.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-semibold">
-                  {registrations.data?.length ?? 0}
-                </div>
-                <Button
-                  className="mt-3"
-                  variant="outline"
-                  onClick={() => setTab("events")}
-                >
-                  View events
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="alerts" className="pt-6">
-          <div className="space-y-4">
-            {(notifications.data ?? []).length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                  No alerts yet. Subscribe to a brand and then create a brand
-                  update from the Business dashboard.
-                </CardContent>
-              </Card>
-            ) : (
-              (notifications.data ?? []).map((n) => (
-                <Card key={n.id}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <CardTitle className="text-base">{n.title}</CardTitle>
-                        <CardDescription>
-                          From{" "}
-                          {brandNameById.get(n.fromBrandId) ?? "Unknown brand"}{" "}
-                          • {formatDate(n.createdAt)}
-                        </CardDescription>
-                      </div>
-                      <Badge
-                        variant={
-                          n.status === "pending" ? "default" : "secondary"
-                        }
-                        className="capitalize"
-                      >
-                        {n.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-sm text-muted-foreground">
-                    {n.message}
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="community" className="pt-6">
-          <div className="space-y-4">
-            {(communityMessages.data ?? []).length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                  No community messages yet. Join a community, then create an
-                  announcement from the Community dashboard.
-                </CardContent>
-              </Card>
-            ) : (
-              (communityMessages.data ?? []).map((m) => (
-                <Card key={m.id}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <CardTitle className="text-base">{m.title}</CardTitle>
-                        <CardDescription>
-                          From{" "}
-                          {communityNameById.get(m.fromCommunityId) ??
-                            "Unknown community"}{" "}
-                          • {formatDate(m.createdAt)}
-                        </CardDescription>
-                      </div>
-                      {m.readAt ? (
-                        <Badge variant="secondary">Read</Badge>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          disabled={markRead.isPending}
-                          onClick={() => markRead.mutate(m.id)}
-                        >
-                          Mark read
-                        </Button>
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-sm text-muted-foreground">
-                    {m.message}
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="events" className="pt-6">
-          <div className="space-y-4">
-            {(registrations.data ?? []).length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                  You haven’t registered for any events yet.
-                </CardContent>
-              </Card>
-            ) : (
-              (registrations.data ?? []).map((r) => {
-                const e = eventById.get(r.eventId);
-                return (
-                  <Card key={r.id}>
-                    <CardHeader>
-                      <CardTitle className="text-base">
-                        {e?.title ?? "Unknown event"}
-                      </CardTitle>
-                      <CardDescription>
-                        Registered {formatDate(r.registeredAt)}
-                        {e ? ` • Starts ${formatDate(e.startsAt)}` : ""}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex gap-2">
-                      <Button asChild variant="outline">
-                        <Link href="/events">Browse events</Link>
-                      </Button>
-                      {e && (
-                        <Button asChild>
-                          <Link href={`/events/${encodeURIComponent(e.id)}`}>
-                            View details
-                          </Link>
-                        </Button>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="subscriptions" className="pt-6">
-          <div className="space-y-4">
-            {(subscriptions.data ?? []).length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                  You’re not subscribed to any brands yet.
-                </CardContent>
-              </Card>
-            ) : (
-              (subscriptions.data ?? []).map((s) => (
-                <Card key={s.id}>
-                  <CardHeader>
-                    <CardTitle className="text-base">
-                      {brandNameById.get(s.brandId) ?? "Unknown brand"}
-                    </CardTitle>
-                    <CardDescription>
-                      Subscribed {formatDate(s.subscribedAt)}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button asChild variant="outline">
-                      <Link href="/brands">Browse more brands</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="memberships" className="pt-6">
-          <div className="space-y-4">
-            {(memberships.data ?? []).length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                  You haven’t joined any communities yet.
-                </CardContent>
-              </Card>
-            ) : (
-              (memberships.data ?? []).map((m) => (
-                <Card key={m.id}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <CardTitle className="text-base">
-                          {communityNameById.get(m.communityId) ??
-                            "Unknown community"}
-                        </CardTitle>
-                        <CardDescription>
-                          Joined {formatDate(m.joinedAt)}
-                        </CardDescription>
-                      </div>
-                      <Badge
-                        className="capitalize"
-                        variant={
-                          m.status === "active" ? "secondary" : "default"
-                        }
-                      >
-                        {m.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Button asChild variant="outline">
-                      <Link href="/">Back to home</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
   );
 }

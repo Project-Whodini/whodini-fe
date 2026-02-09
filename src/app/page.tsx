@@ -1,103 +1,98 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Building2, Users, Ticket, Briefcase, User } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-const accountTypes = [
-  {
-    type: "personal",
-    title: "Personal",
-    description: "Subscribe to brands, join communities, and receive updates.",
-    icon: User,
-  },
-  {
-    type: "business",
-    title: "Business / Brand",
-    description: "Post promotions and create events for subscribers.",
-    icon: Building2,
-  },
-  {
-    type: "community",
-    title: "Community / Organization",
-    description: "Post announcements and manage members.",
-    icon: Users,
-  },
-  {
-    type: "organizer",
-    title: "Event Organizer",
-    description: "Publish events and manage vendors.",
-    icon: Ticket,
-  },
-  {
-    type: "agency",
-    title: "Agency",
-    description: "Manage campaigns for multiple clients.",
-    icon: Briefcase,
-  },
-] as const;
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-export default function HomePage() {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle login logic here
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800 text-white">
-      <div className="flex min-h-screen items-center justify-center px-6 py-10">
-        <div className="w-full max-w-6xl text-center">
-          {/* Top brand block */}
-          <div className="mx-auto mb-8 max-w-2xl space-y-3">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 shadow-lg ring-1 ring-white/10">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/20 to-white/5">
-                <span className="text-lg font-semibold">W</span>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371]">
+      <div className="flex flex-col items-center w-full">
+        {/* Whodini App Name and Icon */}
+        <div className="mb-8 flex flex-col items-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg ring-1 ring-white/20 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/40 to-white/10">
+              <span className="text-lg font-semibold text-[#ff5f6d]">W</span>
+            </div>
+          </div>
+          <span className="text-3xl font-bold tracking-tight text-white drop-shadow-sm">
+            Whodini
+          </span>
+        </div>
+        <div className="bg-white/95 rounded-2xl shadow-xl p-8 w-full max-w-md flex flex-col items-center">
+          <h1 className="text-3xl font-bold mb-2 text-center text-neutral-900">
+            Welcome back
+          </h1>
+          <p className="text-neutral-500 mb-6 text-center">
+            Sign in to access your digital identity
+          </p>
+          <form className="w-full" onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-neutral-700 mb-1"
+              >
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-neutral-700"
+                >
+                  Password
+                </label>
+                <Link
+                  href="/auth/forgot"
+                  className="text-xs text-[#ff5f6d] hover:underline"
+                >
+                  Forgot password?
+                </Link>
               </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full"
+                required
+              />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Whodini</h1>
-            <p className="text-sm text-white/70 sm:text-base">Your Digital Identity Platform</p>
-          </div>
-
-          <div className="mb-6 text-sm font-semibold text-white/80 sm:text-base">
-            Choose your account type
-          </div>
-
-          {/* Account cards */}
-          <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            {accountTypes.map((a) => (
-              <Link key={a.type} href={`/auth/${a.type}?mode=signup`} className="block">
-                <Card className="flex h-full min-h-[190px] flex-col border-white/10 bg-white/5 text-white shadow-sm backdrop-blur transition hover:bg-white/10">
-                  <CardHeader className="flex-1 space-y-2">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/10">
-                      <a.icon className="h-6 w-6 text-white/80" />
-                    </div>
-                    <CardTitle className="text-base">{a.title}</CardTitle>
-                    <CardDescription className="text-xs text-white/60">
-                      {a.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="mt-auto pt-0">
-                    <Button className="w-full" variant="secondary">
-                      Get started
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-
-          {/* Bottom actions */}
-          <div className="mt-8 space-y-2">
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button asChild variant="secondary">
-                <Link href="/events">Browse Events</Link>
-              </Button>
-              <Button asChild variant="secondary">
-                <Link href="/brands">Browse Brands</Link>
-              </Button>
-            </div>
-            <div className="text-sm text-white/70">
-              Already have an account?{" "}
-              <Link href="/auth" className="underline underline-offset-4 hover:text-white">
-                Sign in
-              </Link>
-            </div>
+            <Button
+              type="submit"
+              className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
+            >
+              Sign In
+            </Button>
+          </form>
+          <div className="mt-6 text-sm text-neutral-700 text-center">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="text-[#ff5f6d] font-medium hover:underline"
+            >
+              Sign up
+            </Link>
           </div>
         </div>
       </div>

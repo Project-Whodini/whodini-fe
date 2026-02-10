@@ -6,6 +6,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import appleLogo from "@/assets/apple.svg";
+import facebookLogo from "@/assets/facebook.svg";
+import googleLogo from "@/assets/google.svg";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -113,7 +116,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
-                  src="/assets/google.svg"
+                  src={googleLogo}
                   alt="Google"
                   width={24}
                   height={24}
@@ -125,7 +128,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
-                  src="/assets/facebook.svg"
+                  src={facebookLogo}
                   alt="Facebook"
                   width={24}
                   height={24}
@@ -137,7 +140,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
-                  src="/assets/apple.svg"
+                  src={appleLogo}
                   alt="Apple"
                   width={24}
                   height={24}

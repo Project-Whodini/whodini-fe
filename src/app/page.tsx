@@ -1,101 +1,196 @@
 "use client";
 
-import { Users, Bell, TrendingUp, Plus, Copy } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import appleLogo from "@/assets/apple.svg";
+import facebookLogo from "@/assets/facebook.svg";
+import googleLogo from "@/assets/google.svg";
+import { signInWithEmailPassword } from "@/lib/indexeddb/auth";
+import { writeSession } from "@/lib/dummy/storage";
+import type { Session } from "@/lib/dummy/types";
 
-export default function PersonalPage() {
-  const copySubscriptionLink = () => {
-    // Copy subscription link to clipboard
-    const link = "https://whodini.app/subscribe/WD-P-x8m9n2k5";
-    navigator.clipboard.writeText(link);
-    // You could add a toast notification here
-  };
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const createNotification = () => {
-    // Navigate to create notification page or open modal
-    console.log("Create notification");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    setIsSigningIn(true);
+    try {
+      // Demo mode: Allow any credentials to proceed
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
+
+      const session: Session = {
+        userId: "demo-user-id",
+        email: email || "demo@example.com",
+        displayName: "Demo User",
+        roles: [
+          {
+            accountType: "personal",
+            accountId: "demo-user-id",
+            label: "Personal",
+          },
+        ],
+        activeRoleIndex: 0,
+      };
+      writeSession(session);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to sign in");
+    } finally {
+      setIsSigningIn(false);
+    }
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-neutral-900">
-          Dashboard Overview
-        </h1>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Total Subscribers */}
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Users className="w-4 h-4 text-[#ff5f6d]" />
-                <span className="text-sm font-medium text-neutral-600">
-                  Total Subscribers
-                </span>
-              </div>
-              <div className="text-3xl font-bold text-[#ff5f6d]">0</div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371]">
+      <div className="flex flex-col items-center w-full">
+        {/* Whodini App Name and Icon */}
+        <div className="mb-8 flex flex-col items-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg ring-1 ring-white/20 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/40 to-white/10">
+              <span className="text-lg font-semibold text-[#ff5f6d]">W</span>
             </div>
           </div>
-        </Card>
+          <span className="text-3xl font-bold tracking-tight text-white drop-shadow-sm">
+            Whodini
+          </span>
+        </div>
+        <div className="bg-white/95 rounded-2xl shadow-xl p-8 w-full max-w-md flex flex-col items-center">
+          <h1 className="text-3xl font-bold mb-2 text-center text-neutral-900">
+            Welcome back
+          </h1>
+          <p className="text-neutral-500 mb-6 text-center">
+            Sign in to access your digital identity
+          </p>
+          <form className="w-full" onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-neutral-700 mb-1"
+              >
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-neutral-700"
+                >
+                  Password
+                </label>
+                <Link
+                  href="/auth/forgot"
+                  className="text-xs text-[#ff5f6d] hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+            {error && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+            <Button
+              type="submit"
+              disabled={isSigningIn}
+              className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
+            >
+              {isSigningIn ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
 
-        {/* Notifications Sent */}
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Bell className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-medium text-neutral-600">
-                  Notifications Sent
+          {/* Social Login Section */}
+          <div className="w-full mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-neutral-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white/95 text-neutral-500">
+                  Or continue with
                 </span>
               </div>
-              <div className="text-3xl font-bold text-orange-500">0</div>
+            </div>
+
+            <div className="mt-4 flex justify-center gap-3">
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src={googleLogo}
+                  alt="Google"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src={facebookLogo}
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+              >
+                <Image
+                  src={appleLogo}
+                  alt="Apple"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </button>
             </div>
           </div>
-        </Card>
 
-        {/* This Month */}
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-[#ff5f6d]" />
-                <span className="text-sm font-medium text-neutral-600">
-                  This Month
-                </span>
-              </div>
-              <div className="text-3xl font-bold text-[#ff5f6d]">0</div>
-            </div>
+          <div className="mt-6 text-sm text-neutral-700 text-center">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="text-[#ff5f6d] font-medium hover:underline"
+            >
+              Sign up
+            </Link>
           </div>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-neutral-900">
-          Quick Actions
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            onClick={createNotification}
-            className="bg-[#ff5f6d] hover:bg-[#ff5f6d]/90 text-white font-medium px-4 py-2 rounded-xl shadow-sm border-0 transition-colors"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Notification
-          </Button>
-
-          <Button
-            onClick={copySubscriptionLink}
-            variant="outline"
-            className="border border-neutral-300 text-neutral-700 font-medium px-4 py-2 rounded-xl hover:bg-neutral-50 transition-colors"
-          >
-            <Copy className="w-4 h-4 mr-2" />
-            Copy Subscription Link
-          </Button>
         </div>
       </div>
     </div>

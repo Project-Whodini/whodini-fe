@@ -302,7 +302,7 @@ function OrganizerContent() {
 }
 
 // Generic Content Components for other sections
-function GenericContent({ title, icon: Icon }: { title: string; icon: any }) {
+function GenericContent({ title, icon: Icon }: { title: string; icon: LucideIcon }) {
   return (
     <div className="p-6">
       <div className="flex items-center gap-3 mb-6">

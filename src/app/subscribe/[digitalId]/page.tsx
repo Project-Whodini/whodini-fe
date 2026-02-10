@@ -1,4 +1,5 @@
 import { SubscribeClient } from "@/app/subscribe/[digitalId]/SubscribeClient";
+import { createSeedDb } from "@/lib/dummy/seed";
 
 function safeDecode(value: string) {
   try {
@@ -8,13 +9,15 @@ function safeDecode(value: string) {
   }
 }
 
-export default async function SubscribePage({
-  params,
-}: {
-  params: { digitalId: string } | Promise<{ digitalId: string }>;
-}) {
-  const resolved = await Promise.resolve(params);
-  const digitalId = safeDecode(resolved.digitalId);
-  return <SubscribeClient digitalId={digitalId} />;
+export async function generateStaticParams(): Promise<Array<{ digitalId: string }>> {
+  return createSeedDb().brands.map((b) => ({ digitalId: b.digitalId }));
 }
 
+export default function SubscribePage({
+  params,
+}: {
+  params: { digitalId: string };
+}) {
+  const digitalId = safeDecode(params.digitalId);
+  return <SubscribeClient digitalId={digitalId} />;
+}

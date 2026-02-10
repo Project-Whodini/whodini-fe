@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   LayoutDashboard,
   Calendar,
@@ -137,47 +137,23 @@ export default function SideBar({
   expanded: controlledExpanded,
   onExpandedChange,
 }: SideBarProps) {
-  const [mounted, setMounted] = useState(false);
-  const [expanded, setExpanded] = useState(controlledExpanded ?? true);
-
-  // Sync with controlled expanded state
-  useEffect(() => {
-    if (controlledExpanded !== undefined) {
-      setExpanded(controlledExpanded);
-    }
-  }, [controlledExpanded]);
+  const [uncontrolledExpanded, setUncontrolledExpanded] = useState(true);
+  const expanded = controlledExpanded ?? uncontrolledExpanded;
 
   // Notify parent of expanded state changes
   const handleExpandedChange = (newExpanded: boolean) => {
-    setExpanded(newExpanded);
+    if (controlledExpanded === undefined) setUncontrolledExpanded(newExpanded);
     onExpandedChange?.(newExpanded);
   };
   const [accountTypeId, setAccountTypeId] = useState<string>("personal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownClosing, setDropdownClosing] = useState(false);
-  const [dropdownEntered, setDropdownEntered] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedAccount =
     ACCOUNT_TYPES.find((a) => a.id === accountTypeId) ?? ACCOUNT_TYPES[0];
   const currentNavItems =
     NAV_ITEMS[accountTypeId as keyof typeof NAV_ITEMS] ?? NAV_ITEMS.personal;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Animate in when opening
-  useEffect(() => {
-    if (dropdownOpen && !dropdownClosing) {
-      setDropdownEntered(false);
-      const frame = requestAnimationFrame(() => {
-        requestAnimationFrame(() => setDropdownEntered(true));
-      });
-      return () => cancelAnimationFrame(frame);
-    }
-    if (!dropdownOpen) setDropdownEntered(false);
-  }, [dropdownOpen, dropdownClosing]);
 
   // Run close animation then unmount
   useEffect(() => {
@@ -189,10 +165,10 @@ export default function SideBar({
     return () => clearTimeout(id);
   }, [dropdownClosing]);
 
-  const closeDropdown = () => {
+  const closeDropdown = useCallback(() => {
     if (!dropdownOpen) return;
     setDropdownClosing(true);
-  };
+  }, [dropdownOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -207,13 +183,7 @@ export default function SideBar({
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownOpen]);
-
-  if (!mounted) {
-    return (
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-[#ff5f6d] transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] overflow-hidden z-40" />
-    );
-  }
+  }, [dropdownOpen, closeDropdown]);
 
   return (
     <aside
@@ -229,9 +199,13 @@ export default function SideBar({
         <div className="relative w-full flex justify-center">
           <button
             type="button"
-            onClick={() =>
-              dropdownOpen ? closeDropdown() : setDropdownOpen(true)
-            }
+            onClick={() => {
+              if (dropdownOpen) closeDropdown();
+              else {
+                setDropdownClosing(false);
+                setDropdownOpen(true);
+              }
+            }}
             className={`flex items-center gap-3 py-2.5 bg-white/95 rounded-xl shadow-md ring-1 ring-black/5 hover:bg-white transition text-left ${
               expanded ? "w-full px-4" : "w-10 h-10 justify-center px-0"
             }`}
@@ -281,7 +255,7 @@ export default function SideBar({
                   ? "left-0 right-0 top-full mt-1.5"
                   : "left-full top-0 ml-1.5 min-w-[12rem]"
               } ${
-                dropdownClosing || !dropdownEntered
+                dropdownClosing
                   ? "opacity-0 scale-[0.96] -translate-y-1"
                   : "opacity-100 scale-100 translate-y-0"
               }`}

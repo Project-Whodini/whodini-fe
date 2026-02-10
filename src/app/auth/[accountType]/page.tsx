@@ -7,27 +7,27 @@ function isAllowedAccountType(value: string): boolean {
   return (allowed as readonly string[]).includes(value);
 }
 
-export default async function AccountAuthPage({
+export async function generateStaticParams(): Promise<Array<{ accountType: string }>> {
+  return allowed.map((accountType) => ({ accountType }));
+}
+
+export default function AccountAuthPage({
   params,
   searchParams,
 }: {
-  params: { accountType: string } | Promise<{ accountType: string }>;
-  searchParams?:
-    | { mode?: string; redirect?: string }
-    | Promise<{ mode?: string; redirect?: string }>;
+  params: { accountType: string };
+  searchParams?: { mode?: string; redirect?: string };
 }) {
-  const resolvedParams = await Promise.resolve(params);
-  const resolvedSearchParams = await Promise.resolve(searchParams ?? {});
+  const resolvedSearchParams = searchParams ?? {};
 
-  if (!isAllowedAccountType(resolvedParams.accountType)) notFound();
+  if (!isAllowedAccountType(params.accountType)) notFound();
   const initialMode = resolvedSearchParams.mode === "login" ? "login" : "signup";
 
   return (
     <AccountAuthClient
-      accountType={resolvedParams.accountType}
+      accountType={params.accountType}
       initialMode={initialMode}
       redirect={resolvedSearchParams.redirect}
     />
   );
 }
-

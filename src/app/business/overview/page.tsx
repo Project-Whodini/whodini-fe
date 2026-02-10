@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +21,6 @@ import {
   Users,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
 
 interface Product {
   id: string;
@@ -55,6 +54,7 @@ export default function BusinessOverviewPage() {
       featured: false,
     },
   ]);
+  const nextProductIdRef = useRef(3);
 
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -84,7 +84,7 @@ export default function BusinessOverviewPage() {
       );
     } else {
       const newProduct: Product = {
-        id: Date.now().toString(),
+        id: String(nextProductIdRef.current++),
         ...formData,
         price: parseFloat(formData.price),
       };

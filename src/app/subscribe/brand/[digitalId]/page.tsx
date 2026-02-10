@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
+import { createSeedDb } from "@/lib/dummy/seed";
 
-export default async function BrandSubscribeRedirectPage({
-  params,
-}: {
-  params: { digitalId: string } | Promise<{ digitalId: string }>;
-}) {
-  const resolvedParams = await Promise.resolve(params);
-  redirect(`/subscribe/${encodeURIComponent(resolvedParams.digitalId)}`);
+export async function generateStaticParams(): Promise<Array<{ digitalId: string }>> {
+  return createSeedDb().brands.map((b) => ({ digitalId: b.digitalId }));
 }
 
+export default function BrandSubscribeRedirectPage({
+  params,
+}: {
+  params: { digitalId: string };
+}) {
+  redirect(`/subscribe/${encodeURIComponent(params.digitalId)}`);
+}

@@ -1,4 +1,5 @@
 import { JoinClient } from "@/app/join/[digitalId]/JoinClient";
+import { createSeedDb } from "@/lib/dummy/seed";
 
 function safeDecode(value: string) {
   try {
@@ -8,12 +9,15 @@ function safeDecode(value: string) {
   }
 }
 
-export default async function JoinCommunityPage({
+export async function generateStaticParams(): Promise<Array<{ digitalId: string }>> {
+  return createSeedDb().communities.map((c) => ({ digitalId: c.digitalId }));
+}
+
+export default function JoinCommunityPage({
   params,
 }: {
-  params: { digitalId: string } | Promise<{ digitalId: string }>;
+  params: { digitalId: string };
 }) {
-  const resolved = await Promise.resolve(params);
-  const digitalId = safeDecode(resolved.digitalId);
+  const digitalId = safeDecode(params.digitalId);
   return <JoinClient digitalId={digitalId} />;
 }

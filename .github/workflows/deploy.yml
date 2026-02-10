@@ -40,6 +40,7 @@ jobs:
       - name: Build Next.js app
         env:
           BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_DISABLE_AUTH: "true"
         run: npm run build
 
       - name: Add .nojekyll file

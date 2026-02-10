@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
@@ -9,18 +10,23 @@ import Image from "next/image";
 import appleLogo from "@/assets/apple.svg";
 import facebookLogo from "@/assets/facebook.svg";
 import googleLogo from "@/assets/google.svg";
+import { createUser, type AccountType } from "@/lib/indexeddb/auth";
 export default function RegisterPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [accountTypes, setAccountTypes] = useState({
     personal: true,
     business: false,
     community: false,
-    event: false,
+    organizer: false,
     agency: false,
   });
 
@@ -34,8 +40,35 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    const selectedAccountTypes = Object.entries(accountTypes)
+      .filter(([, selected]) => selected)
+      .map(([key]) => key as AccountType);
+
+    setIsSaving(true);
+    try {
+      await createUser({
+        name,
+        email,
+        password,
+        accountTypes: selectedAccountTypes,
+      });
+      setSuccess("Account saved locally");
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create account");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -148,7 +181,7 @@ export default function RegisterPage() {
                       { key: "personal", label: "Personal" },
                       { key: "business", label: "Business" },
                       { key: "community", label: "Community" },
-                      { key: "event", label: "Event" },
+                      { key: "organizer", label: "Event" },
                       { key: "agency", label: "Agency" },
                     ].map(({ key, label }) => (
                       <div
@@ -181,9 +214,24 @@ export default function RegisterPage() {
                 </div>
               </div>
 
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
+
+              {success && (
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                  {success}
+                </div>
+              )}
+
               {/* Create Account Button */}
-              <Button className="w-full mt-3 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] hover:opacity-90 text-white font-bold h-11 rounded-xl shadow-lg border-none transition-transform active:scale-95">
-                Create Account
+              <Button
+                disabled={isSaving}
+                className="w-full mt-3 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] hover:opacity-90 text-white font-bold h-11 rounded-xl shadow-lg border-none transition-transform active:scale-95"
+              >
+                {isSaving ? "Saving..." : "Create Account"}
               </Button>
             </form>
 

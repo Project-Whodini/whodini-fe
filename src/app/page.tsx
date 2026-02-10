@@ -9,19 +9,37 @@ import Image from "next/image";
 import appleLogo from "@/assets/apple.svg";
 import facebookLogo from "@/assets/facebook.svg";
 import googleLogo from "@/assets/google.svg";
+import { signInWithEmailPassword } from "@/lib/indexeddb/auth";
+import { writeSession } from "@/lib/dummy/storage";
+import type { Session } from "@/lib/dummy/types";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    // Validate that both fields are filled
-    if (email.trim() && password.trim()) {
-      // Navigate to dashboard
+    setIsSigningIn(true);
+    try {
+      const user = await signInWithEmailPassword({ email, password });
+      const session: Session = {
+        userId: user.id,
+        email: user.email,
+        displayName: user.name,
+        roles: [{ accountType: "personal", accountId: user.id, label: "Personal" }],
+        activeRoleIndex: 0,
+      };
+      writeSession(session);
       router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to sign in");
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -60,7 +78,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-qqfull"
+                className="w-full"
                 required
               />
             </div>
@@ -89,11 +107,17 @@ export default function LoginPage() {
                 required
               />
             </div>
+            {error && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
             <Button
               type="submit"
+              disabled={isSigningIn}
               className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
             >
-              Sign In
+              {isSigningIn ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 

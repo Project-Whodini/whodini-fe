@@ -724,7 +724,7 @@ export default function ServicesPage() {
                       ))}
                     </div>
                   </div>
-                  <p className="text-neutral-700 mb-3">"{feedback.comment}"</p>
+                  <p className="text-neutral-700 mb-3">{feedback.comment}</p>
                   <div className="text-xs text-neutral-500">
                     {feedback.date}
                   </div>

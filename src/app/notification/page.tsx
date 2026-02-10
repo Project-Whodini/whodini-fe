@@ -180,7 +180,16 @@ export default function NotificationsPage() {
                   </div>
                   {(activeTab === "pending" || activeTab === "saved") && (
                     <div className="flex items-center gap-1">
-                      <span>Expires in {notification.expiresAt}</span>
+                      <span>
+                        Expires in{" "}
+                        {activeTab === "pending"
+                          ? (
+                              notification as (typeof mockNotifications.pending)[0]
+                            ).expiresAt
+                          : (
+                              notification as (typeof mockNotifications.saved)[0]
+                            ).expiresAt}
+                      </span>
                     </div>
                   )}
                 </div>

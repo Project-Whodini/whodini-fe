@@ -148,7 +148,7 @@ export default function ActivityPage() {
     },
   ];
 
-  const getActivityIcon = (category) => {
+  const getActivityIcon = (category: string) => {
     switch (category) {
       case "Promotion":
         return <Gift className="w-4 h-4 text-[#ff5f6d]" />;

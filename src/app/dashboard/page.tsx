@@ -1,32 +1,17 @@
 "use client";
 
-import { JSX, useState, useEffect } from "react";
+import { JSX, useState } from "react";
 import { RequireSession } from "@/components/app/RequireSession";
 import SideBar from "@/components/app/SideBar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Home,
-  Gamepad2,
-  Gift,
   Activity,
-  Calendar,
   Bell,
   Users,
   Crown,
   CreditCard,
-  TrendingUp,
-  Building2,
   Settings,
   UserCheck,
   Plus,
@@ -37,18 +22,10 @@ import {
   MessageSquare,
   Mail,
   Truck,
-  Package,
-  Star,
-  DollarSign,
-  ShoppingBag,
-  Tag,
-  Edit,
-  Trash2,
   type LucideIcon,
 } from "lucide-react";
 
 // Import actual page components
-import BusinessDashboardPage from "../business/page";
 import EventsPage from "../events/page";
 import CommunityDashboardPage from "../community/page";
 import BrandsPage from "../brands/page";
@@ -56,215 +33,20 @@ import AgencyPage from "../agency/page";
 import OrganizerPage from "../organizer/page";
 import BusinessSetupPage from "../business/setup/page";
 import BusinessOverviewPage from "../business/overview/page";
-
-// Personal Account Content Components (keeping these as basic since no specific pages exist)
-function PersonalHomeContent() {
-  return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Welcome Back!</h1>
-        <p className="text-muted-foreground">
-          Here&apos;s your personal dashboard overview
-        </p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Notifications
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">5</div>
-            <p className="text-sm text-muted-foreground">Unread messages</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Gift className="w-4 h-4" />
-              Reward Points
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold text-[#ff5f6d]">2,450</div>
-            <p className="text-sm text-muted-foreground">Ready to redeem</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Events
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">3</div>
-            <p className="text-sm text-muted-foreground">Upcoming events</p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function GamesContent() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Games & Challenges</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Daily Challenge</CardTitle>
-            <CardDescription>
-              Complete today&apos;s challenge to earn points
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold text-green-600 mb-2">
-              +50 XP
-            </div>
-            <Button className="w-full">Play Now</Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Weekly Streak</CardTitle>
-            <CardDescription>Keep your streak alive</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold text-blue-600 mb-2">
-              7 Days
-            </div>
-            <Button variant="outline" className="w-full">
-              View Progress
-            </Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Leaderboard</CardTitle>
-            <CardDescription>See how you rank</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold text-purple-600 mb-2">
-              #12
-            </div>
-            <Button variant="outline" className="w-full">
-              View Rankings
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function RewardsContent() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Rewards & Points</h1>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Your Points</CardTitle>
-            <CardDescription>
-              Redeem points for exclusive rewards
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-[#ff5f6d] mb-4">2,450</div>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 border rounded-lg">
-                <div>
-                  <div className="font-medium">10% Discount</div>
-                  <div className="text-sm text-muted-foreground">
-                    Any purchase
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">500 pts</div>
-                  <Button size="sm">Redeem</Button>
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-3 border rounded-lg">
-                <div>
-                  <div className="font-medium">Free Shipping</div>
-                  <div className="text-sm text-muted-foreground">
-                    Next order
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">750 pts</div>
-                  <Button size="sm">Redeem</Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Reward History</CardTitle>
-            <CardDescription>Your recent redemptions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2 border-b">
-                <div>
-                  <div className="font-medium">5% Discount Used</div>
-                  <div className="text-sm text-muted-foreground">
-                    2 days ago
-                  </div>
-                </div>
-                <Badge variant="secondary">-250 pts</Badge>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b">
-                <div>
-                  <div className="font-medium">Daily Login Bonus</div>
-                  <div className="text-sm text-muted-foreground">
-                    3 days ago
-                  </div>
-                </div>
-                <Badge variant="outline">+100 pts</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-// Wrapper components to extract content from actual page components
-function BusinessOverviewContent() {
-  return (
-    <div className="h-full w-full">
-      <BusinessOverviewPage />
-    </div>
-  );
-}
+import PersonalPage from "../personal/page";
+import GamesPage from "../games/page";
+import RewardsPage from "../rewards/page";
+import ActivityPage from "../activity/page";
+import NotificationsPage from "../notification/page";
+import CommunityPage from "../community/page";
+import MembershipsPage from "../membership/page";
+import SubscriptionsPage from "../subscriptions/page";
+import ServicesPage from "../service/page";
 
 function BusinessSetupContent() {
   return (
     <div className="h-full w-full">
       <BusinessSetupPage />
-    </div>
-  );
-}
-
-function BusinessDashboardContent() {
-  return (
-    <div className="h-full w-full">
-      <BusinessDashboardPage />
-    </div>
-  );
-}
-
-function EventsContent() {
-  return (
-    <div className="h-full w-full">
-      <EventsPage />
     </div>
   );
 }
@@ -302,7 +84,13 @@ function OrganizerContent() {
 }
 
 // Generic Content Components for other sections
-function GenericContent({ title, icon: Icon }: { title: string; icon: LucideIcon }) {
+function GenericContent({
+  title,
+  icon: Icon,
+}: {
+  title: string;
+  icon: LucideIcon;
+}) {
   return (
     <div className="p-6">
       <div className="flex items-center gap-3 mb-6">
@@ -329,29 +117,23 @@ export default function DashboardPage() {
   // Content routing map
   const contentMap: Record<string, () => JSX.Element> = {
     // Personal Account
-    "/": () => <PersonalHomeContent />,
-    "/home": () => <PersonalHomeContent />,
-    "/games": () => <GamesContent />,
-    "/rewards": () => <RewardsContent />,
-    "/activity": () => <GenericContent title="Activity" icon={Activity} />,
-    "/events": () => <EventsContent />,
-    "/notifications": () => (
-      <GenericContent title="Notifications" icon={Bell} />
-    ),
-    "/community": () => <CommunityContent />,
-    "/memberships": () => <GenericContent title="Memberships" icon={Crown} />,
-    "/subscriptions": () => (
-      <GenericContent title="Subscriptions" icon={CreditCard} />
-    ),
+    "/": () => <PersonalPage />,
+    "/home": () => <PersonalPage />,
+    "/games": () => <GamesPage />,
+    "/rewards": () => <RewardsPage />,
+    "/activity": () => <ActivityPage />,
+    "/events": () => <EventsPage />,
+    "/notifications": () => <NotificationsPage />,
+    "/community": () => <CommunityPage />,
+    "/memberships": () => <MembershipsPage />,
+    "/subscriptions": () => <SubscriptionsPage />,
 
     // Business Account
-    "/business/overview": () => <BusinessOverviewContent />,
+    "/business/overview": () => <BusinessOverviewPage />,
     "/business/setup": () => <BusinessSetupContent />,
-    "/business/events": () => <EventsContent />,
+    "/business/events": () => <EventsPage />,
     "/brands": () => <BrandsContent />,
-    "/business/services": () => (
-      <GenericContent title="Services" icon={Settings} />
-    ),
+    "/business/services": () => <ServicesPage />,
     "/business/subscribers": () => (
       <GenericContent title="Subscribers" icon={UserCheck} />
     ),

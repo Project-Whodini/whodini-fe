@@ -1,222 +1,347 @@
 "use client";
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import { RequireSession } from "@/components/app/RequireSession";
+import { useState } from "react";
+import {
+  Users,
+  MessageSquare,
+  Sparkles,
+  Search,
+  Heart,
+  MapPin,
+  Calendar,
+  Eye,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useApproveMembershipMutation, useCommunitiesQuery, useCommunityMembersQuery, useCreateCommunityAnnouncementMutation, useSessionQuery } from "@/hooks/useDummyApi";
 
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-}
+const mockData = {
+  messages: [
+    {
+      id: 1,
+      community: "Tech Innovators",
+      author: "Sarah Chen",
+      message:
+        "Excited to share our latest AI breakthrough! Join us for a live demo this Friday.",
+      timestamp: "2 hours ago",
+      likes: 24,
+      image: "💻",
+    },
+    {
+      id: 2,
+      community: "Design Squad",
+      author: "Mike Rodriguez",
+      message:
+        "Check out this amazing portfolio piece from one of our members!",
+      timestamp: "4 hours ago",
+      likes: 18,
+      image: "🎨",
+    },
+    {
+      id: 3,
+      community: "Fitness Warriors",
+      author: "Emma Johnson",
+      message:
+        "Morning workout session was incredible! Who's joining tomorrow's run?",
+      timestamp: "1 day ago",
+      likes: 32,
+      image: "💪",
+    },
+  ],
+  showcase: [
+    {
+      id: 1,
+      community: "Photography Club",
+      title: "Monthly Photo Contest",
+      description:
+        "Submit your best nature photography for our February contest.",
+      image: "📸",
+      participants: 156,
+      deadline: "5 days left",
+    },
+    {
+      id: 2,
+      community: "Cooking Masters",
+      title: "Recipe Share Week",
+      description: "Share your family's secret recipes with the community.",
+      image: "👨‍🍳",
+      participants: 89,
+      deadline: "2 weeks left",
+    },
+    {
+      id: 3,
+      community: "Book Lovers",
+      title: "February Book Club",
+      description: "Currently reading 'The Midnight Library' by Matt Haig.",
+      image: "📚",
+      participants: 67,
+      deadline: "1 month left",
+    },
+  ],
+  discover: [
+    {
+      id: 1,
+      name: "Startup Founders",
+      description: "Connect with fellow entrepreneurs and share your journey.",
+      members: 2450,
+      category: "Business",
+      image: "🚀",
+      isNew: true,
+    },
+    {
+      id: 2,
+      name: "Local Foodies",
+      description:
+        "Discover the best restaurants and hidden gems in your city.",
+      members: 1890,
+      category: "Food & Drink",
+      image: "🍕",
+      isNew: false,
+    },
+    {
+      id: 3,
+      name: "Pet Parents",
+      description: "Share tips, photos, and connect with other pet owners.",
+      members: 3200,
+      category: "Lifestyle",
+      image: "🐕",
+      isNew: true,
+    },
+    {
+      id: 4,
+      name: "Music Producers",
+      description: "Collaborate on beats, share techniques, and network.",
+      members: 890,
+      category: "Creative",
+      image: "🎵",
+      isNew: false,
+    },
+  ],
+};
 
-export default function CommunityDashboardPage() {
-  return (
-    <RequireSession>
-      <CommunityDashboardInner />
-    </RequireSession>
-  );
-}
+type TabType = "messages" | "showcase" | "discover";
 
-function CommunityDashboardInner() {
-  const { data: session } = useSessionQuery();
-  const communities = useCommunitiesQuery();
+export default function CommunityPage() {
+  const [activeTab, setActiveTab] = useState<TabType>("messages");
 
-  const communityRole = useMemo(
-    () => session?.roles.find((r) => r.accountType === "community") ?? null,
-    [session]
-  );
+  const tabs = [
+    { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "showcase", label: "Showcase", icon: Sparkles },
+    { id: "discover", label: "Discover", icon: Search },
+  ];
 
-  const community = useMemo(() => {
-    if (!communityRole) return null;
-    return (communities.data ?? []).find((c) => c.id === communityRole.accountId) ?? null;
-  }, [communities.data, communityRole]);
-
-  const members = useCommunityMembersQuery(community?.id ?? "", !!community);
-  const approve = useApproveMembershipMutation();
-  const announce = useCreateCommunityAnnouncementMutation();
-
-  const [tab, setTab] = useState("overview");
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-
-  if (!communityRole) {
-    return (
-      <div className="mx-auto max-w-2xl px-6 py-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>No community role yet</CardTitle>
-            <CardDescription>Create a Community/Organization role to access this dashboard.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            <Button asChild>
-              <Link href="/auth/community?mode=signup">Create community role</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/dashboard">Go to personal dashboard</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!community) {
-    return (
-      <div className="mx-auto max-w-2xl px-6 py-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>Community not found</CardTitle>
-            <CardDescription>This role points to a community that doesn’t exist in local data.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="outline">
-              <Link href="/dashboard">Go to personal dashboard</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const joinLink = `/join/${encodeURIComponent(community.digitalId)}`;
-  const pendingCount = (members.data ?? []).filter((m) => m.status === "pending").length;
-
-  return (
-    <div className="mx-auto max-w-6xl px-6 py-10">
-      <div className="mb-6 space-y-1">
-        <h1 className="text-2xl font-semibold">{community.name}</h1>
-        <p className="text-sm text-muted-foreground">Community dashboard: approve members and post announcements.</p>
-      </div>
-
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="members">
-            Members{" "}
-            {pendingCount > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {pendingCount} pending
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="announcements">Announcements</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="pt-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Share your join link</CardTitle>
-                <CardDescription>Members join through this link.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-md border bg-muted/30 p-3">
-                  <div className="text-xs text-muted-foreground">Digital ID</div>
-                  <div className="font-mono text-sm">{community.digitalId}</div>
-                </div>
-                <div className="flex gap-2">
-                  <Button asChild variant="outline" className="flex-1">
-                    <Link href={joinLink}>Open join page</Link>
-                  </Button>
-                  <Button asChild className="flex-1">
-                    <Link href="/dashboard">View personal inbox</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Workflow tip</CardTitle>
-                <CardDescription>See the end state in the Personal dashboard.</CardDescription>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground space-y-2">
-                <p>1) Join your community as a personal user.</p>
-                <p>2) If approval is required, approve them in the Members tab.</p>
-                <p>3) Post an announcement → switch to Personal dashboard → Community.</p>
-              </CardContent>
-            </Card>
+  const renderMessages = () => {
+    if (mockData.messages.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="w-16 h-16 mb-6 flex items-center justify-center rounded-full bg-neutral-100">
+            <Users className="w-8 h-8 text-neutral-400" />
           </div>
-        </TabsContent>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+            No community messages yet
+          </h3>
+          <p className="text-neutral-500">
+            Join communities to receive updates
+          </p>
+        </div>
+      );
+    }
 
-        <TabsContent value="members" className="pt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Members</CardTitle>
-              <CardDescription>List (shows user IDs for now).</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {(members.data ?? []).length === 0 ? (
-                <p className="text-sm text-muted-foreground">No members yet.</p>
-              ) : (
-                (members.data ?? []).map((m) => (
-                  <div key={m.id} className="flex items-center justify-between rounded-md border p-3">
-                    <div className="text-sm">
-                      <div className="font-mono text-xs text-muted-foreground">{m.userId}</div>
-                      <div>
-                        Joined {formatDate(m.joinedAt)} •{" "}
-                        <span className="capitalize">{m.status}</span>
-                      </div>
-                    </div>
-                    {m.status === "pending" ? (
-                      <Button
-                        size="sm"
-                        onClick={() => approve.mutate(m.id)}
-                        disabled={approve.isPending}
-                      >
-                        Approve
-                      </Button>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
+    return (
+      <div className="space-y-4">
+        {mockData.messages.map((message) => (
+          <Card
+            key={message.id}
+            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">{message.image}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="text-xs">
+                      {message.community}
+                    </Badge>
+                    <span className="text-sm text-neutral-500">•</span>
+                    <span className="text-sm text-neutral-600">
+                      {message.author}
+                    </span>
+                    <span className="text-sm text-neutral-500">•</span>
+                    <span className="text-sm text-neutral-500">
+                      {message.timestamp}
+                    </span>
                   </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="announcements" className="pt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Post an announcement</CardTitle>
-              <CardDescription>
-                This will appear in the Personal dashboard Community inbox for active members.
-              </CardDescription>
+                  <p className="text-sm text-neutral-700 leading-relaxed">
+                    {message.message}
+                  </p>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="aTitle">Title</Label>
-                <Input id="aTitle" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <CardContent className="pt-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-neutral-500">
+                  <Heart className="w-4 h-4" />
+                  <span>{message.likes} likes</span>
+                </div>
+                <Button size="sm" variant="outline" className="text-xs">
+                  Reply
+                </Button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="aMsg">Message</Label>
-                <Input id="aMsg" value={message} onChange={(e) => setMessage(e.target.value)} />
-              </div>
-              <Button
-                disabled={announce.isPending}
-                onClick={async () => {
-                  await announce.mutateAsync({ communityId: community.id, title, message });
-                  setTitle("");
-                  setMessage("");
-                }}
-              >
-                Send announcement
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                After sending: go to <Link className="underline" href="/dashboard">Personal dashboard</Link> → Community.
-              </p>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        ))}
+      </div>
+    );
+  };
+
+  const renderShowcase = () => {
+    return (
+      <div className="space-y-4">
+        {mockData.showcase.map((item) => (
+          <Card
+            key={item.id}
+            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">{item.image}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="text-xs">
+                      {item.community}
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-lg font-semibold text-neutral-900 mb-2">
+                    {item.title}
+                  </CardTitle>
+                  <p className="text-sm text-neutral-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-sm text-neutral-500">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>{item.participants} participants</span>
+                  </div>
+                  <span>•</span>
+                  <span>{item.deadline}</span>
+                </div>
+                <Button
+                  size="sm"
+                  className="text-xs bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
+                >
+                  Join
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  };
+
+  const renderDiscover = () => {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {mockData.discover.map((community) => (
+          <Card
+            key={community.id}
+            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">{community.image}</div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <CardTitle className="text-lg font-semibold text-neutral-900">
+                        {community.name}
+                      </CardTitle>
+                      {community.isNew && (
+                        <Badge className="text-xs bg-[#ff5f6d] text-white">
+                          New
+                        </Badge>
+                      )}
+                    </div>
+                    <Badge variant="outline" className="text-xs mb-2">
+                      {community.category}
+                    </Badge>
+                    <p className="text-sm text-neutral-600 leading-relaxed">
+                      {community.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-neutral-500">
+                  <Users className="w-4 h-4" />
+                  <span>{community.members.toLocaleString()} members</span>
+                </div>
+                <Button
+                  size="sm"
+                  className="text-xs bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
+                >
+                  Join Community
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "messages":
+        return renderMessages();
+      case "showcase":
+        return renderShowcase();
+      case "discover":
+        return renderDiscover();
+      default:
+        return renderMessages();
+    }
+  };
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-neutral-900">Community Hub</h1>
+      </div>
+
+      {/* Tabs */}
+      <div className="mb-6">
+        <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-fit">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as TabType)}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                  activeTab === tab.id
+                    ? "bg-white text-[#ff5f6d] shadow-sm"
+                    : "text-neutral-600 hover:text-neutral-900"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Content */}
+      {renderContent()}
     </div>
   );
 }

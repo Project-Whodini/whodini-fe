@@ -62,7 +62,7 @@ const ACCOUNT_TYPES = [
 
 const NAV_ITEMS = {
   personal: [
-    { label: "Home", href: "/", icon: Home },
+    { label: "Overview", href: "/", icon: TrendingUp },
     { label: "Games", href: "/games", icon: Gamepad2 },
     { label: "Rewards", href: "/rewards", icon: Gift },
     { label: "Activity", href: "/activity", icon: Activity },
@@ -74,7 +74,6 @@ const NAV_ITEMS = {
   ],
   business: [
     { label: "Overview", href: "/business/overview", icon: TrendingUp },
-    { label: "Setup", href: "/business/setup", icon: Wrench },
     { label: "Events", href: "/events", icon: Calendar },
     { label: "Brands", href: "/brands", icon: Building2 },
     { label: "Services", href: "/business/services", icon: Settings },
@@ -86,6 +85,8 @@ const NAV_ITEMS = {
       icon: Plus,
     },
     { label: "History", href: "/business/history", icon: History },
+    { label: "Setup", href: "/business/setup", icon: Wrench },
+
     { label: "Settings", href: "/business/settings", icon: Cog },
   ],
   community: [
@@ -187,7 +188,7 @@ export default function SideBar({
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen flex flex-col items-center py-8 shadow-xl rounded-r-2xl bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] overflow-hidden transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] z-40 ${
+      className={`fixed left-0 top-0 h-screen flex flex-col items-center py-8 shadow-xl bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] overflow-hidden transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] z-40 ${
         expanded ? "w-64" : "w-[4.5rem]"
       }`}
     >

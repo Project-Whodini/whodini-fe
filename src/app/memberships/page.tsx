@@ -73,11 +73,11 @@ export default function MembershipsPage() {
     console.log("Join communities");
   };
 
-  const viewCommunity = (communityId) => {
+  const viewCommunity = (communityId: number | string) => {
     console.log("View community:", communityId);
   };
 
-  const sendMessage = (communityId) => {
+  const sendMessage = (communityId: number | string) => {
     console.log("Send message to community:", communityId);
   };
 

@@ -73,11 +73,11 @@ export default function SubscriptionsPage() {
     console.log("Discover brands");
   };
 
-  const viewBrand = (brandId) => {
+  const viewBrand = (brandId: number | string) => {
     console.log("View brand:", brandId);
   };
 
-  const viewPromotions = (brandId) => {
+  const viewPromotions = (brandId: number | string) => {
     console.log("View promotions for brand:", brandId);
   };
 

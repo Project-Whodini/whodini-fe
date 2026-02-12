@@ -7,11 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import {
-  Activity,
-  Bell,
   Users,
-  Crown,
-  CreditCard,
   Settings,
   UserCheck,
   Plus,
@@ -40,9 +36,13 @@ import ActivityPage from "../activity/page";
 import NotificationsPage from "../notification/page";
 import CommunityPage from "../community/page";
 import MembershipsPage from "../membership/page";
-import SubscriptionsPage from "../subscriptions/page";
+import SubscriptionsPage from "../subscription/page";
 import ServicesPage from "../service/page";
-
+import SubscriberPage from "../subscriber/page";
+import TeamPage from "../team/page";
+import BusinessNotificationPage from "../business/notifications/page";
+import BusinessHistoryPage from "../business/history/page";
+import BusinessSettingsPage from "../business/settings/page";
 function BusinessSetupContent() {
   return (
     <div className="h-full w-full">
@@ -134,17 +134,11 @@ export default function DashboardPage() {
     "/business/events": () => <EventsPage />,
     "/brands": () => <BrandsContent />,
     "/business/services": () => <ServicesPage />,
-    "/business/subscribers": () => (
-      <GenericContent title="Subscribers" icon={UserCheck} />
-    ),
-    "/business/team": () => <GenericContent title="Team" icon={Users} />,
-    "/business/notifications/create": () => (
-      <GenericContent title="Create Notification" icon={Plus} />
-    ),
-    "/business/history": () => (
-      <GenericContent title="History" icon={History} />
-    ),
-    "/business/settings": () => <GenericContent title="Settings" icon={Cog} />,
+    "/business/subscribers": () => <SubscriberPage />,
+    "/business/team": () => <TeamPage />,
+    "/business/notifications/create": () => <BusinessNotificationPage />,
+    "/business/history": () => <BusinessHistoryPage />,
+    "/business/settings": () => <BusinessSettingsPage />,
 
     // Community Account
     "/community/overview": () => <CommunityContent />,

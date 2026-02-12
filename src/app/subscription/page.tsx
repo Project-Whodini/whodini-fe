@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { RequireSession } from "@/components/app/RequireSession";
 import { Button } from "@/components/ui/button";

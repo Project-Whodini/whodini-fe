@@ -22,27 +22,50 @@ import {
 } from "lucide-react";
 
 // Import actual page components
-import EventsPage from "../events/page";
-import CommunityDashboardPage from "../community/page";
+import EventsPage from "../personal/events/page";
+import CommunityDashboardPage from "../personal/community/page";
 import BrandsPage from "../brands/page";
 import AgencyPage from "../agency/page";
 import OrganizerPage from "../organizer/page";
 import BusinessSetupPage from "../business/setup/page";
 import BusinessOverviewPage from "../business/overview/page";
 import PersonalPage from "../personal/page";
-import GamesPage from "../games/page";
-import RewardsPage from "../rewards/page";
-import ActivityPage from "../activity/page";
-import NotificationsPage from "../notification/page";
-import CommunityPage from "../community/page";
-import MembershipsPage from "../membership/page";
-import SubscriptionsPage from "../subscription/page";
-import ServicesPage from "../service/page";
-import SubscriberPage from "../subscriber/page";
-import TeamPage from "../team/page";
+import GamesPage from "../personal/games/page";
+import RewardsPage from "../personal/rewards/page";
+import ActivityPage from "../personal/activity/page";
+import NotificationsPage from "../personal/notification/page";
+import CommunityPage from "../personal/community/page";
+import MembershipsPage from "../personal/membership/page";
+import SubscriptionsPage from "../personal/subscription/page";
+import ServicesPage from "../business/service/page";
+import SubscriberPage from "../business/subscriber/page";
+import TeamPage from "../business/team/page";
 import BusinessNotificationPage from "../business/notifications/page";
 import BusinessHistoryPage from "../business/history/page";
 import BusinessSettingsPage from "../business/settings/page";
+import BusinessEventsPage from "../business/events/page";
+import OrganizerEventsPage from "../organizer/events/page";
+import OrganizerVendorsPage from "../organizer/vendors/page";
+import OrganizerServicesPage from "../organizer/services/page";
+import OrganizerTeamPage from "../organizer/team/page";
+import OrganizerSettingsPage from "../organizer/settings/page";
+import AgencyDashboardPage from "../agency/page";
+import AgencyClientsPage from "../agency/clients/page";
+import AgencyServicesPage from "../agency/services/page";
+import AgencyTeamPage from "../agency/team/page";
+import AgencySettingsPage from "../agency/settings/page";
+import CommunityMembersPage from "../community/members/page";
+import CommunityChaptersPage from "../community/chapters/page";
+import CommunityDirectoryPage from "../community/directory/page";
+import CommunityMessagePage from "../community/message/page";
+import CommunityMessageBoardPage from "../community/message-board/page";
+import OrganizerDashboardPage from "../organizer/page";
+import CommunityTeamPage from "../community/team/page";
+import CommunityEventsPage from "../community/events/page";
+import CommunityServicesPage from "../community/services/page";
+import CommunityHistoryPage from "../community/history/page";
+import CommunitySettingsPage from "../community/settings/page";
+
 function BusinessSetupContent() {
   return (
     <div className="h-full w-full">
@@ -51,37 +74,11 @@ function BusinessSetupContent() {
   );
 }
 
-function CommunityContent() {
-  return (
-    <div className="h-full w-full">
-      <CommunityDashboardPage />
-    </div>
-  );
-}
 
-function BrandsContent() {
-  return (
-    <div className="h-full w-full">
-      <BrandsPage />
-    </div>
-  );
-}
 
-function AgencyContent() {
-  return (
-    <div className="h-full w-full">
-      <AgencyPage />
-    </div>
-  );
-}
 
-function OrganizerContent() {
-  return (
-    <div className="h-full w-full">
-      <OrganizerPage />
-    </div>
-  );
-}
+
+
 
 // Generic Content Components for other sections
 function GenericContent({
@@ -131,8 +128,8 @@ export default function DashboardPage() {
     // Business Account
     "/business/overview": () => <BusinessOverviewPage />,
     "/business/setup": () => <BusinessSetupContent />,
-    "/business/events": () => <EventsPage />,
-    "/brands": () => <BrandsContent />,
+    "/business/events": () => <BusinessEventsPage />,
+    "/business/brands": () => <BrandsPage />,
     "/business/services": () => <ServicesPage />,
     "/business/subscribers": () => <SubscriberPage />,
     "/business/team": () => <TeamPage />,
@@ -141,42 +138,34 @@ export default function DashboardPage() {
     "/business/settings": () => <BusinessSettingsPage />,
 
     // Community Account
-    "/community/overview": () => <CommunityContent />,
-    "/community/chapters": () => (
-      <GenericContent title="Chapters" icon={BookOpen} />
-    ),
-    "/community/members": () => <GenericContent title="Members" icon={Users} />,
-    "/community/directory": () => (
-      <GenericContent title="Directory" icon={FolderOpen} />
-    ),
-    "/community/message-board": () => (
-      <GenericContent title="Message Board" icon={MessageSquare} />
-    ),
-    "/community/message": () => <GenericContent title="Messages" icon={Mail} />,
-
+    "/community/overview": () => <CommunityDashboardPage />,
+   "/community/events": () =>  <CommunityEventsPage />,
+    "/community/chapters": () => <CommunityChaptersPage />,
+    "/community/members": () => <CommunityMembersPage />,
+    "/community/team": () => <CommunityTeamPage />,
+    "/community/directory": () => <CommunityDirectoryPage />,
+    "/community/message-board": () => <CommunityMessageBoardPage />,
+    "/community/message": () => <CommunityMessagePage />,
+    "/community/services": () => <CommunityServicesPage />,
+    "/community/history": () => <CommunityHistoryPage />,
+    "/community/settings": () => <CommunitySettingsPage />,
+    
+    
+    
     // Event Organizer
-    "/event/overview": () => <OrganizerContent />,
-    "/event/vendors": () => <GenericContent title="Vendors" icon={Truck} />,
-    "/event/services": () => (
-      <GenericContent title="Event Services" icon={Settings} />
-    ),
-    "/event/team": () => <GenericContent title="Event Team" icon={Users} />,
-    "/event/settings": () => (
-      <GenericContent title="Event Settings" icon={Cog} />
-    ),
+    "/event/overview": () => <OrganizerDashboardPage />,
+    "/event/vendors": () => <OrganizerVendorsPage />,
+    "/event/events": () => <OrganizerEventsPage />,
+    "/event/services": () => <OrganizerServicesPage />,
+    "/event/team": () => <OrganizerTeamPage />,
+    "/event/settings": () => <OrganizerSettingsPage />,
 
     // Agency
-    "/agency/overview": () => <AgencyContent />,
-    "/agency/clients": () => <GenericContent title="Clients" icon={Users} />,
-    "/agency/services": () => (
-      <GenericContent title="Agency Services" icon={Settings} />
-    ),
-    "/agency/team": () => (
-      <GenericContent title="Agency Team" icon={UserCheck} />
-    ),
-    "/agency/settings": () => (
-      <GenericContent title="Agency Settings" icon={Cog} />
-    ),
+    "/agency/overview": () => <AgencyDashboardPage />,
+    "/agency/clients": () => <AgencyClientsPage />,
+    "/agency/services": () => <AgencyServicesPage />,
+    "/agency/team": () => <AgencyTeamPage />,
+    "/agency/settings": () => <AgencySettingsPage />,
   };
 
   // Navigate to content

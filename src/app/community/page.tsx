@@ -1,347 +1,166 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Users,
-  MessageSquare,
-  Sparkles,
-  Search,
-  Heart,
-  MapPin,
-  Calendar,
-  Eye,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Users, BookOpen, Calendar, MessageSquare, Settings, TrendingUp, ArrowRight, Users2, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const mockData = {
-  messages: [
-    {
-      id: 1,
-      community: "Tech Innovators",
-      author: "Sarah Chen",
-      message:
-        "Excited to share our latest AI breakthrough! Join us for a live demo this Friday.",
-      timestamp: "2 hours ago",
-      likes: 24,
-      image: "💻",
-    },
-    {
-      id: 2,
-      community: "Design Squad",
-      author: "Mike Rodriguez",
-      message:
-        "Check out this amazing portfolio piece from one of our members!",
-      timestamp: "4 hours ago",
-      likes: 18,
-      image: "🎨",
-    },
-    {
-      id: 3,
-      community: "Fitness Warriors",
-      author: "Emma Johnson",
-      message:
-        "Morning workout session was incredible! Who's joining tomorrow's run?",
-      timestamp: "1 day ago",
-      likes: 32,
-      image: "💪",
-    },
-  ],
-  showcase: [
-    {
-      id: 1,
-      community: "Photography Club",
-      title: "Monthly Photo Contest",
-      description:
-        "Submit your best nature photography for our February contest.",
-      image: "📸",
-      participants: 156,
-      deadline: "5 days left",
-    },
-    {
-      id: 2,
-      community: "Cooking Masters",
-      title: "Recipe Share Week",
-      description: "Share your family's secret recipes with the community.",
-      image: "👨‍🍳",
-      participants: 89,
-      deadline: "2 weeks left",
-    },
-    {
-      id: 3,
-      community: "Book Lovers",
-      title: "February Book Club",
-      description: "Currently reading 'The Midnight Library' by Matt Haig.",
-      image: "📚",
-      participants: 67,
-      deadline: "1 month left",
-    },
-  ],
-  discover: [
-    {
-      id: 1,
-      name: "Startup Founders",
-      description: "Connect with fellow entrepreneurs and share your journey.",
-      members: 2450,
-      category: "Business",
-      image: "🚀",
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: "Local Foodies",
-      description:
-        "Discover the best restaurants and hidden gems in your city.",
-      members: 1890,
-      category: "Food & Drink",
-      image: "🍕",
-      isNew: false,
-    },
-    {
-      id: 3,
-      name: "Pet Parents",
-      description: "Share tips, photos, and connect with other pet owners.",
-      members: 3200,
-      category: "Lifestyle",
-      image: "🐕",
-      isNew: true,
-    },
-    {
-      id: 4,
-      name: "Music Producers",
-      description: "Collaborate on beats, share techniques, and network.",
-      members: 890,
-      category: "Creative",
-      image: "🎵",
-      isNew: false,
-    },
-  ],
-};
+export default function CommunityDashboardPage() {
+	const communityName = "Digital Innovators Community";
+	const totalMembers = 2847;
+	const activeMembers = 1250;
+	const totalChapters = 8;
+	const upcomingEvents = 12;
+	const monthlyRevenue = 15420;
 
-type TabType = "messages" | "showcase" | "discover";
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 p-6">
+			<div className="max-w-7xl mx-auto">
+				<div className="mb-8">
+					<h1 className="text-3xl font-bold text-neutral-900">Community Dashboard</h1>
+					<p className="text-neutral-600 mt-1">
+						Welcome to <span className="font-semibold">{communityName}</span>
+					</p>
+				</div>
 
-export default function CommunityPage() {
-  const [activeTab, setActiveTab] = useState<TabType>("messages");
+				<div className="grid gap-6 md:grid-cols-4 mb-8">
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-medium text-neutral-600">Total Members</CardTitle>
+								<Users className="w-4 h-4 text-neutral-400" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-3xl font-bold text-neutral-900">{totalMembers.toLocaleString()}</div>
+							<p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+								<TrendingUp className="w-3 h-3" />
+								{activeMembers} active
+							</p>
+						</CardContent>
+					</Card>
 
-  const tabs = [
-    { id: "messages", label: "Messages", icon: MessageSquare },
-    { id: "showcase", label: "Showcase", icon: Sparkles },
-    { id: "discover", label: "Discover", icon: Search },
-  ];
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-medium text-neutral-600">Chapters</CardTitle>
+								<BookOpen className="w-4 h-4 text-neutral-400" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-3xl font-bold text-neutral-900">{totalChapters}</div>
+							<p className="text-xs text-neutral-500 mt-1">Active regions</p>
+						</CardContent>
+					</Card>
 
-  const renderMessages = () => {
-    if (mockData.messages.length === 0) {
-      return (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="w-16 h-16 mb-6 flex items-center justify-center rounded-full bg-neutral-100">
-            <Users className="w-8 h-8 text-neutral-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-neutral-900 mb-2">
-            No community messages yet
-          </h3>
-          <p className="text-neutral-500">
-            Join communities to receive updates
-          </p>
-        </div>
-      );
-    }
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-medium text-neutral-600">Upcoming Events</CardTitle>
+								<Calendar className="w-4 h-4 text-neutral-400" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-3xl font-bold text-neutral-900">{upcomingEvents}</div>
+							<p className="text-xs text-neutral-500 mt-1">Next 3 months</p>
+						</CardContent>
+					</Card>
 
-    return (
-      <div className="space-y-4">
-        {mockData.messages.map((message) => (
-          <Card
-            key={message.id}
-            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl">{message.image}</div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      {message.community}
-                    </Badge>
-                    <span className="text-sm text-neutral-500">•</span>
-                    <span className="text-sm text-neutral-600">
-                      {message.author}
-                    </span>
-                    <span className="text-sm text-neutral-500">•</span>
-                    <span className="text-sm text-neutral-500">
-                      {message.timestamp}
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-700 leading-relaxed">
-                    {message.message}
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-neutral-500">
-                  <Heart className="w-4 h-4" />
-                  <span>{message.likes} likes</span>
-                </div>
-                <Button size="sm" variant="outline" className="text-xs">
-                  Reply
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  };
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-medium text-neutral-600">Monthly Engagement</CardTitle>
+								<Zap className="w-4 h-4 text-neutral-400" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-3xl font-bold text-neutral-900">${monthlyRevenue.toLocaleString()}</div>
+							<p className="text-xs text-neutral-500 mt-1">Community value</p>
+						</CardContent>
+					</Card>
+				</div>
 
-  const renderShowcase = () => {
-    return (
-      <div className="space-y-4">
-        {mockData.showcase.map((item) => (
-          <Card
-            key={item.id}
-            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl">{item.image}</div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      {item.community}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-neutral-900 mb-2">
-                    {item.title}
-                  </CardTitle>
-                  <p className="text-sm text-neutral-600 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm text-neutral-500">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{item.participants} participants</span>
-                  </div>
-                  <span>•</span>
-                  <span>{item.deadline}</span>
-                </div>
-                <Button
-                  size="sm"
-                  className="text-xs bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
-                >
-                  Join
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  };
+				<div className="grid gap-6 md:grid-cols-2">
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader>
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-lg font-semibold text-neutral-900">Quick Actions</CardTitle>
+							</div>
+						</CardHeader>
+						<CardContent className="space-y-3">
+							<Button asChild className="w-full bg-[#ff5f6d] hover:bg-[#ff5f6d]/90 text-white rounded-lg justify-between">
+								<Link href="/community/members">
+									<span>Manage Members</span>
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+							<Button asChild variant="outline" className="w-full border-neutral-300 hover:bg-neutral-50 rounded-lg justify-between">
+								<Link href="/community/events">
+									<span>Upcoming Events</span>
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+							<Button asChild variant="outline" className="w-full border-neutral-300 hover:bg-neutral-50 rounded-lg justify-between">
+								<Link href="/community/chapters">
+									<span>Manage Chapters</span>
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+							<Button asChild variant="outline" className="w-full border-neutral-300 hover:bg-neutral-50 rounded-lg justify-between">
+								<Link href="/community/messageBoard">
+									<span>Message Board</span>
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+							<Button asChild variant="outline" className="w-full border-neutral-300 hover:bg-neutral-50 rounded-lg justify-between">
+								<Link href="/community/settings">
+									<span>Settings</span>
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+						</CardContent>
+					</Card>
 
-  const renderDiscover = () => {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {mockData.discover.map((community) => (
-          <Card
-            key={community.id}
-            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">{community.image}</div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <CardTitle className="text-lg font-semibold text-neutral-900">
-                        {community.name}
-                      </CardTitle>
-                      {community.isNew && (
-                        <Badge className="text-xs bg-[#ff5f6d] text-white">
-                          New
-                        </Badge>
-                      )}
-                    </div>
-                    <Badge variant="outline" className="text-xs mb-2">
-                      {community.category}
-                    </Badge>
-                    <p className="text-sm text-neutral-600 leading-relaxed">
-                      {community.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-neutral-500">
-                  <Users className="w-4 h-4" />
-                  <span>{community.members.toLocaleString()} members</span>
-                </div>
-                <Button
-                  size="sm"
-                  className="text-xs bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
-                >
-                  Join Community
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  };
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "messages":
-        return renderMessages();
-      case "showcase":
-        return renderShowcase();
-      case "discover":
-        return renderDiscover();
-      default:
-        return renderMessages();
-    }
-  };
-
-  return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-neutral-900">Community Hub</h1>
-      </div>
-
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-fit">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as TabType)}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                  activeTab === tab.id
-                    ? "bg-white text-[#ff5f6d] shadow-sm"
-                    : "text-neutral-600 hover:text-neutral-900"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Content */}
-      {renderContent()}
-    </div>
-  );
+					<Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+						<CardHeader>
+							<CardTitle className="text-lg font-semibold text-neutral-900">Recent Activity</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<div className="flex items-start gap-3 text-sm">
+								<div className="w-2 h-2 rounded-full bg-[#ff5f6d] mt-2"></div>
+								<div>
+									<p className="text-neutral-900 font-medium">New member joined</p>
+									<p className="text-neutral-600">Sarah Chen registered in Tech Chapter</p>
+								</div>
+							</div>
+							<div className="flex items-start gap-3 text-sm">
+								<div className="w-2 h-2 rounded-full bg-green-500 mt-2"></div>
+								<div>
+									<p className="text-neutral-900 font-medium">Event announced</p>
+									<p className="text-neutral-600">Q2 Leadership Summit scheduled for April 15</p>
+								</div>
+							</div>
+							<div className="flex items-start gap-3 text-sm">
+								<div className="w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
+								<div>
+									<p className="text-neutral-900 font-medium">Discussion started</p>
+									<p className="text-neutral-600">45 new posts on AI in Business</p>
+								</div>
+							</div>
+							<div className="flex items-start gap-3 text-sm">
+								<div className="w-2 h-2 rounded-full bg-amber-500 mt-2"></div>
+								<div>
+									<p className="text-neutral-900 font-medium">Chapter milestone</p>
+									<p className="text-neutral-600">West Coast Chapter reached 500 members</p>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
+			</div>
+		</div>
+	);
 }

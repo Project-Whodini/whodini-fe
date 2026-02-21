@@ -34,8 +34,8 @@ export default function AgencySettingsPage() {
 	});
 
 	const [apiSettings, setApiSettings] = useState({
-		apiKey: "sk_live_51M2j3H47d8q2k0lxK9v2w3e4r5t6y7u8i9o0p1a2s3d4f5g6",
-		webhookUrl: "https://demoagency.com/webhooks/stripe",
+		apiKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "",
+		webhookUrl: process.env.NEXT_PUBLIC_WEBHOOK_URL || "",
 		rateLimit: 1000,
 		monthlyApiCalls: 45230,
 	});

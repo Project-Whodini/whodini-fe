@@ -74,8 +74,8 @@ const NAV_ITEMS = {
   ],
   business: [
     { label: "Overview", href: "/business/overview", icon: TrendingUp },
-    { label: "Events", href: "/events", icon: Calendar },
-    { label: "Brands", href: "/brands", icon: Building2 },
+    { label: "Events", href: "/business/events", icon: Calendar },
+    { label: "Brands", href: "/business/brands", icon: Building2 },
     { label: "Services", href: "/business/services", icon: Settings },
     { label: "Subscribers", href: "/business/subscribers", icon: UserCheck },
     { label: "Team", href: "/business/team", icon: Users },
@@ -91,7 +91,7 @@ const NAV_ITEMS = {
   ],
   community: [
     { label: "Overview", href: "/community/overview", icon: TrendingUp },
-    { label: "Events", href: "/events", icon: Calendar },
+    { label: "Events", href: "/community/events", icon: Calendar },
     { label: "Chapters", href: "/community/chapters", icon: BookOpen },
     { label: "Members", href: "/community/members", icon: Users },
     { label: "Team", href: "/community/team", icon: UserCheck },
@@ -108,7 +108,7 @@ const NAV_ITEMS = {
   ],
   event: [
     { label: "Overview", href: "/event/overview", icon: TrendingUp },
-    { label: "Events", href: "/events", icon: Calendar },
+    { label: "Events", href: "/event/events", icon: Calendar },
     { label: "Vendors", href: "/event/vendors", icon: Truck },
     { label: "Services", href: "/event/services", icon: Settings },
     { label: "Team", href: "/event/team", icon: Users },

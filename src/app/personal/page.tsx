@@ -3,14 +3,31 @@
 import { Bell, Heart, Mail, Users, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Building2, CalendarDays, BriefcaseBusiness } from "lucide-react";
+import { TooltipText } from "@/components/ui/tooltip";
 
 export default function PersonalPage() {
+  const lastFollowedBusiness = "Nova Coffee Roasters";
+  const lastJoinedCommunity = "Creators Circle Manila";
+  const nextEventName = "Weekend Makers Meetup";
+  const activeAgency = "GrowthForge Agency";
+
   const browseBrands = () => {
     console.log("Browse brands");
   };
 
   const discoverCommunities = () => {
     console.log("Discover communities");
+  };
+
+  const openAccountType = (
+    accountTypeId: "business" | "community" | "event" | "agency",
+  ) => {
+    window.dispatchEvent(
+      new CustomEvent("whodini:open-account-type", {
+        detail: { accountTypeId },
+      }),
+    );
   };
 
   return (
@@ -56,6 +73,104 @@ export default function PersonalPage() {
             <Users className="w-4 h-4 mr-2" />
             Discover Communities
           </Button>
+        </div>
+      </div>
+
+      {/* Cross-Account Snapshot (Static) */}
+      <div className="space-y-4">
+        <h2 className="text-lg sm:text-xl font-semibold text-neutral-900">
+          Cross-Account Snapshot
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+          <Card
+            className="p-5 border border-neutral-200 rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition"
+            onClick={() => openAccountType("business")}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-medium text-neutral-900">
+                  Business
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-blue-500">4</div>
+              <p className="text-sm text-neutral-600">
+                Businesses you followed
+              </p>
+              <TooltipText
+                text={`Last followed: ${lastFollowedBusiness}`}
+                className="text-xs text-neutral-500"
+                as="p"
+              />
+            </div>
+          </Card>
+
+          <Card
+            className="p-5 border border-neutral-200 rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition"
+            onClick={() => openAccountType("community")}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm font-medium text-neutral-900">
+                  Community
+                </span>
+              </div>
+              <TooltipText
+                text={`Last joined: ${lastJoinedCommunity}`}
+                className="text-base font-semibold text-neutral-900"
+                as="div"
+              />
+              <p className="text-sm text-neutral-600">Joined 5 days ago</p>
+              <p className="text-xs text-neutral-500">
+                2 unread updates from this community
+              </p>
+            </div>
+          </Card>
+
+          <Card
+            className="p-5 border border-neutral-200 rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition"
+            onClick={() => openAccountType("event")}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="w-4 h-4 text-violet-500" />
+                <span className="text-sm font-medium text-neutral-900">
+                  Event
+                </span>
+              </div>
+              <TooltipText
+                text={`Next event: ${nextEventName}`}
+                className="text-base font-semibold text-neutral-900"
+                as="div"
+              />
+              <p className="text-sm text-neutral-600">March 16, 2026</p>
+              <p className="text-xs text-neutral-500">Saved from your activity</p>
+            </div>
+          </Card>
+
+          <Card
+            className="p-5 border border-neutral-200 rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition"
+            onClick={() => openAccountType("agency")}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <BriefcaseBusiness className="w-4 h-4 text-amber-500" />
+                <span className="text-sm font-medium text-neutral-900">
+                  Agency
+                </span>
+              </div>
+              <TooltipText
+                text={`Active agency: ${activeAgency}`}
+                className="text-base font-semibold text-neutral-900"
+                as="div"
+              />
+              <p className="text-sm text-neutral-600">Current agency partner</p>
+              <p className="text-xs text-neutral-500">
+                Managing your campaign and brand collaborations
+              </p>
+            </div>
+          </Card>
         </div>
       </div>
 

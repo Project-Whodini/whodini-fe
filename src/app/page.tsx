@@ -52,24 +52,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371]">
-      <div className="flex flex-col items-center w-full">
+    <div className="min-h-dvh flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] px-4 py-6 sm:px-6 sm:py-8">
+      <div className="flex flex-col items-center w-full max-w-md sm:max-w-lg">
         {/* Whodini App Name and Icon */}
-        <div className="mb-8 flex flex-col items-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg ring-1 ring-white/20 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/40 to-white/10">
-              <span className="text-lg font-semibold text-[#ff5f6d]">W</span>
+        <div className="mb-6 sm:mb-8 flex flex-col items-center">
+          <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg ring-1 ring-white/20 mb-2">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/40 to-white/10">
+              <span className="text-base sm:text-lg font-semibold text-[#ff5f6d]">W</span>
             </div>
           </div>
-          <span className="text-3xl font-bold tracking-tight text-white drop-shadow-sm">
+          <span className="text-2xl sm:text-3xl font-bold tracking-tight text-white drop-shadow-sm">
             Whodini
           </span>
         </div>
-        <div className="bg-white/95 rounded-2xl shadow-xl p-8 w-full max-w-md flex flex-col items-center">
-          <h1 className="text-3xl font-bold mb-2 text-center text-neutral-900">
+        <div className="bg-white/95 rounded-2xl shadow-xl p-5 sm:p-8 w-full flex flex-col items-center">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-neutral-900">
             Welcome back
           </h1>
-          <p className="text-neutral-500 mb-6 text-center">
+          <p className="text-sm sm:text-base text-neutral-500 mb-5 sm:mb-6 text-center">
             Sign in to access your digital identity
           </p>
           <form className="w-full" onSubmit={handleSubmit}>
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isSigningIn}
-              className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
+              className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-sm sm:text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
             >
               {isSigningIn ? "Signing in..." : "Sign In"}
             </Button>
@@ -142,43 +142,43 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex justify-center gap-3">
+            <div className="mt-4 flex justify-center gap-2 sm:gap-3">
               <button
                 type="button"
-                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
                   src={googleLogo}
                   alt="Google"
                   width={24}
                   height={24}
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                 />
               </button>
-              <button
+              {/* <button
                 type="button"
-                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
                   src={facebookLogo}
                   alt="Facebook"
                   width={24}
                   height={24}
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                 />
               </button>
               <button
                 type="button"
-                className="flex items-center justify-center w-12 h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
                   src={appleLogo}
                   alt="Apple"
                   width={24}
                   height={24}
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                 />
-              </button>
+              </button> */}
             </div>
           </div>
 

@@ -3,26 +3,15 @@
 import { useState } from "react";
 import {
   Gift,
-  Star,
   Crown,
-  Coffee,
   Ticket,
-  ShoppingBag,
   Percent,
-  Calendar,
-  Trophy,
-  TrendingUp,
   Clock,
-  CheckCircle,
-  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -35,7 +24,7 @@ const rewardCategories = [
       {
         id: 1,
         name: "5% Off Any Purchase",
-        cost: 250,
+        voucherCode: "VDISC-5OFF-24A",
         description: "Valid for 30 days",
         expires: "30 days",
         popular: false,
@@ -43,7 +32,7 @@ const rewardCategories = [
       {
         id: 2,
         name: "10% Off Any Purchase",
-        cost: 500,
+        voucherCode: "VDISC-10OFF-92K",
         description: "Valid for 30 days",
         expires: "30 days",
         popular: true,
@@ -51,7 +40,7 @@ const rewardCategories = [
       {
         id: 3,
         name: "15% Off Premium Items",
-        cost: 750,
+        voucherCode: "VDISC-15PREM-7QZ",
         description: "Exclusive items only",
         expires: "30 days",
         popular: false,
@@ -59,7 +48,7 @@ const rewardCategories = [
       {
         id: 4,
         name: "25% Off Everything",
-        cost: 1500,
+        voucherCode: "VDISC-25ALL-5MN",
         description: "Limited time offer",
         expires: "7 days",
         popular: false,
@@ -74,7 +63,7 @@ const rewardCategories = [
       {
         id: 5,
         name: "Free Shipping",
-        cost: 300,
+        voucherCode: "VSHIP-FREE-3ORD",
         description: "Next 3 orders",
         expires: "60 days",
         popular: true,
@@ -82,7 +71,7 @@ const rewardCategories = [
       {
         id: 6,
         name: "Free Coffee Voucher",
-        cost: 400,
+        voucherCode: "VCOFFEE-FREE-1CP",
         description: "CoffeeHouse partner",
         expires: "90 days",
         popular: false,
@@ -90,7 +79,7 @@ const rewardCategories = [
       {
         id: 7,
         name: "Free Brand Merchandise",
-        cost: 800,
+        voucherCode: "VMERCH-BRAND-88X",
         description: "Exclusive branded items",
         expires: "30 days",
         popular: false,
@@ -98,7 +87,7 @@ const rewardCategories = [
       {
         id: 8,
         name: "Free Premium Trial",
-        cost: 1200,
+        voucherCode: "VPREMIUM-TRIAL-3M",
         description: "3 months premium access",
         expires: "7 days",
         popular: false,
@@ -113,7 +102,7 @@ const rewardCategories = [
       {
         id: 9,
         name: "VIP Event Access",
-        cost: 2000,
+        voucherCode: "VVIP-EVENT-001",
         description: "Exclusive brand events",
         expires: "Limited",
         popular: true,
@@ -121,7 +110,7 @@ const rewardCategories = [
       {
         id: 10,
         name: "Meet & Greet",
-        cost: 2500,
+        voucherCode: "VMEET-GREET-22A",
         description: "With brand ambassadors",
         expires: "Limited",
         popular: false,
@@ -129,7 +118,7 @@ const rewardCategories = [
       {
         id: 11,
         name: "Workshop Access",
-        cost: 1800,
+        voucherCode: "VWORKSHOP-ACCESS-4K",
         description: "Skill development sessions",
         expires: "30 days",
         popular: false,
@@ -137,7 +126,7 @@ const rewardCategories = [
       {
         id: 12,
         name: "Private Consultation",
-        cost: 3000,
+        voucherCode: "VCONSULT-PRIVATE-7P",
         description: "1-on-1 expert advice",
         expires: "60 days",
         popular: false,
@@ -152,7 +141,7 @@ const rewardCategories = [
       {
         id: 13,
         name: "Early Product Access",
-        cost: 1000,
+        voucherCode: "VEARLY-PRODUCT-1ST",
         description: "Be first to buy new releases",
         expires: "90 days",
         popular: true,
@@ -160,7 +149,7 @@ const rewardCategories = [
       {
         id: 14,
         name: "Exclusive Content",
-        cost: 600,
+        voucherCode: "VCONTENT-EXCL-55B",
         description: "Behind-the-scenes access",
         expires: "60 days",
         popular: false,
@@ -168,7 +157,7 @@ const rewardCategories = [
       {
         id: 15,
         name: "Priority Support",
-        cost: 1500,
+        voucherCode: "VSUPPORT-PRIORITY-9T",
         description: "Skip the queue",
         expires: "180 days",
         popular: false,
@@ -176,7 +165,7 @@ const rewardCategories = [
       {
         id: 16,
         name: "Beta Features",
-        cost: 2200,
+        voucherCode: "VBETA-FEATURES-0R",
         description: "Test new features first",
         expires: "120 days",
         popular: false,
@@ -188,86 +177,69 @@ const rewardCategories = [
 const rewardHistory = [
   {
     id: 1,
-    type: "redemption",
-    name: "10% Off Purchase Used",
+    name: "10% Off Any Purchase",
     brand: "TechCorp",
-    cost: -500,
+    voucherCode: "VDISC-10OFF-92K",
     date: "2 days ago",
     status: "used",
   },
   {
     id: 2,
-    type: "earned",
-    name: "Event Attendance Bonus",
-    brand: "Design Workshop",
-    cost: 250,
+    name: "Free Coffee Voucher",
+    brand: "CoffeeHouse",
+    voucherCode: "VCOFFEE-FREE-1CP",
     date: "3 days ago",
-    status: "earned",
+    status: "active",
   },
   {
     id: 3,
-    type: "redemption",
-    name: "Free Shipping Redeemed",
+    name: "Free Shipping",
     brand: "FashionForward",
-    cost: -300,
+    voucherCode: "VSHIP-FREE-3ORD",
     date: "5 days ago",
     status: "active",
   },
   {
     id: 4,
-    type: "earned",
-    name: "Daily Login Streak (7 days)",
-    brand: "Whodini",
-    cost: 150,
+    name: "Early Product Access",
+    brand: "Tech Innovators",
+    voucherCode: "VEARLY-PRODUCT-1ST",
     date: "1 week ago",
-    status: "earned",
+    status: "active",
   },
   {
     id: 5,
-    type: "redemption",
     name: "VIP Event Access",
     brand: "Tech Conference",
-    cost: -2000,
+    voucherCode: "VVIP-EVENT-001",
     date: "2 weeks ago",
     status: "used",
   },
   {
     id: 6,
-    type: "earned",
-    name: "Community Contribution",
-    brand: "Tech Innovators",
-    cost: 100,
+    name: "Exclusive Content",
+    brand: "Creators Hub",
+    voucherCode: "VCONTENT-EXCL-55B",
     date: "2 weeks ago",
-    status: "earned",
+    status: "active",
   },
   {
     id: 7,
-    type: "earned",
-    name: "Brand Subscription Bonus",
-    brand: "Multiple Brands",
-    cost: 300,
+    name: "Priority Support",
+    brand: "ServicePro",
+    voucherCode: "VSUPPORT-PRIORITY-9T",
     date: "3 weeks ago",
-    status: "earned",
+    status: "active",
   },
   {
     id: 8,
-    type: "redemption",
-    name: "5% Discount Used",
+    name: "5% Off Any Purchase",
     brand: "CoffeeHouse",
-    cost: -250,
+    voucherCode: "VDISC-5OFF-24A",
     date: "1 month ago",
     status: "used",
   },
 ];
-
-const userStats = {
-  currentPoints: 2450,
-  totalEarned: 5200,
-  totalSpent: 2750,
-  membershipTier: "Gold",
-  nextTierProgress: 75,
-  nextTierRequired: 3000,
-};
 
 type CategoryType = "discounts" | "freebies" | "experiences" | "exclusive";
 
@@ -281,90 +253,27 @@ export default function RewardsPage() {
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
         <Gift className="w-6 h-6 text-[#ff5f6d]" />
-        <h1 className="text-2xl font-semibold">Rewards & Points</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold">Rewards & Points</h1>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[#ff5f6d] mb-2">
-              {userStats.currentPoints.toLocaleString()}
-            </div>
-            <div className="text-sm text-neutral-600">Available Points</div>
-          </div>
-        </Card>
-
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-500 mb-2">
-              {userStats.totalEarned.toLocaleString()}
-            </div>
-            <div className="text-sm text-neutral-600">Total Earned</div>
-          </div>
-        </Card>
-
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-500 mb-2">
-              {userStats.totalSpent.toLocaleString()}
-            </div>
-            <div className="text-sm text-neutral-600">Total Redeemed</div>
-          </div>
-        </Card>
-
-        <Card className="p-6 border border-neutral-200 rounded-xl bg-white shadow-sm">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Crown className="w-5 h-5 text-yellow-500" />
-              <span className="text-lg font-bold text-yellow-500">
-                {userStats.membershipTier}
-              </span>
-            </div>
-            <div className="text-sm text-neutral-600">Member Tier</div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Tier Progress */}
-      <Card className="p-6 border border-neutral-200 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-semibold text-neutral-900">
-              Progress to Platinum
-            </h3>
-            <p className="text-sm text-neutral-600">
-              Earn{" "}
-              {(
-                userStats.nextTierRequired - userStats.currentPoints
-              ).toLocaleString()}{" "}
-              more points to unlock exclusive benefits
-            </p>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-orange-500">
-              {userStats.nextTierProgress}%
-            </div>
-          </div>
-        </div>
-        <div className="w-full bg-neutral-200 rounded-full h-3">
-          <div
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-300"
-            style={{ width: `${userStats.nextTierProgress}%` }}
-          />
-        </div>
+      <Card className="p-4 sm:p-6 border border-neutral-200 rounded-xl bg-gradient-to-r from-pink-50 to-rose-50">
+        <h3 className="font-semibold text-neutral-900 mb-1">Voucher Wallet</h3>
+        <p className="text-sm text-neutral-600">
+          Redeem and manage vouchers here. Points and tier tracking are not
+          available yet.
+        </p>
       </Card>
 
       {/* Navigation Tabs */}
       <div className="flex gap-1 mb-6">
-        <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg">
+        <div className="flex w-full sm:w-fit gap-1 p-1 bg-neutral-100 rounded-lg">
           <button
             onClick={() => setShowHistory(false)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
               !showHistory
                 ? "bg-white text-[#ff5f6d] shadow-sm"
                 : "text-neutral-600 hover:text-neutral-900"
@@ -374,13 +283,13 @@ export default function RewardsPage() {
           </button>
           <button
             onClick={() => setShowHistory(true)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
               showHistory
                 ? "bg-white text-[#ff5f6d] shadow-sm"
                 : "text-neutral-600 hover:text-neutral-900"
             }`}
           >
-            Reward History
+            Voucher History
           </button>
         </div>
       </div>
@@ -388,12 +297,12 @@ export default function RewardsPage() {
       {!showHistory ? (
         <div>
           {/* Category Tabs */}
-          <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-fit mb-6">
+          <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-full sm:w-fit mb-6 overflow-x-auto">
             {rewardCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id as CategoryType)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
                   activeCategory === category.id
                     ? "bg-white text-[#ff5f6d] shadow-sm"
                     : "text-neutral-600 hover:text-neutral-900"
@@ -406,13 +315,13 @@ export default function RewardsPage() {
           </div>
 
           {/* Rewards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {currentCategory?.rewards.map((reward) => (
               <Card
                 key={reward.id}
                 className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -434,23 +343,11 @@ export default function RewardsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-bold text-[#ff5f6d]">
-                      {reward.cost.toLocaleString()} pts
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="text-xs sm:text-sm font-semibold text-[#ff5f6d] break-all">
+                      {reward.voucherCode}
                     </div>
-                    <Button
-                      size="sm"
-                      disabled={userStats.currentPoints < reward.cost}
-                      className={
-                        userStats.currentPoints >= reward.cost
-                          ? ""
-                          : "opacity-50 cursor-not-allowed"
-                      }
-                    >
-                      {userStats.currentPoints >= reward.cost
-                        ? "Redeem"
-                        : "Need More Points"}
-                    </Button>
+                    <Button size="sm">Get Voucher</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -465,23 +362,13 @@ export default function RewardsPage() {
               key={item.id}
               className="border border-neutral-200 rounded-xl bg-white shadow-sm"
             >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4">
-                    <div
-                      className={`p-2 rounded-full ${
-                        item.type === "earned"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-blue-100 text-blue-600"
-                      }`}
-                    >
-                      {item.type === "earned" ? (
-                        <TrendingUp className="w-4 h-4" />
-                      ) : (
-                        <Gift className="w-4 h-4" />
-                      )}
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+                  <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                    <div className="p-2 rounded-full bg-blue-100 text-blue-600">
+                      <Gift className="w-4 h-4" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="font-semibold text-neutral-900 mb-1">
                         {item.name}
                       </h3>
@@ -507,13 +394,8 @@ export default function RewardsPage() {
                       </div>
                     </div>
                   </div>
-                  <div
-                    className={`text-lg font-bold ${
-                      item.cost > 0 ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {item.cost > 0 ? "+" : ""}
-                    {item.cost.toLocaleString()} pts
+                  <div className="text-xs sm:text-sm font-semibold text-[#ff5f6d] break-all sm:text-right">
+                    {item.voucherCode}
                   </div>
                 </div>
               </CardContent>

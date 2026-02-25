@@ -73,8 +73,8 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] p-1 sm:p-2 overflow-y-auto">
-        <div className="bg-white rounded-2xl shadow-2xl p-3 sm:p-4 md:p-6 w-full max-w-lg sm:max-w-2xl md:max-w-3xl my-2">
+      <div className="min-h-dvh flex items-center justify-center bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] px-3 py-4 sm:px-4 sm:py-6">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-7 w-full max-w-lg sm:max-w-2xl md:max-w-4xl">
           {/* ROW 1: Header */}
           <div className="mb-4 sm:mb-6 border-b text-center border-neutral-100 pb-2 sm:pb-3">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 tracking-tight">
@@ -86,10 +86,10 @@ export default function RegisterPage() {
           </div>
 
           {/* ROW 2: Single Column Form */}
-          <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="max-w-3xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               {/* Row 1: Name and Account Types */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
                 <div>
                   <label className="text-sm font-semibold text-neutral-700 block mb-2">
                     Name
@@ -176,7 +176,7 @@ export default function RegisterPage() {
                   <label className="text-sm font-semibold text-neutral-700 block mb-2">
                     Account Types
                   </label>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-3 sm:gap-4">
                     {[
                       { key: "personal", label: "Personal" },
                       { key: "business", label: "Business" },
@@ -186,7 +186,7 @@ export default function RegisterPage() {
                     ].map(({ key, label }) => (
                       <div
                         key={key}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-neutral-200 hover:border-neutral-300 transition-colors"
+                        className="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg border border-neutral-200 hover:border-neutral-300 transition-colors"
                       >
                         <input
                           type="checkbox"
@@ -229,6 +229,7 @@ export default function RegisterPage() {
               {/* Create Account Button */}
               <Button
                 disabled={isSaving}
+                type="submit"
                 className="w-full mt-3 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] hover:opacity-90 text-white font-bold h-11 rounded-xl shadow-lg border-none transition-transform active:scale-95"
               >
                 {isSaving ? "Saving..." : "Create Account"}
@@ -236,22 +237,22 @@ export default function RegisterPage() {
             </form>
 
             {/* Row 2: Social Login Icons */}
-            <div className="flex justify-center gap-3 mt-4">
+            <div className="flex justify-center gap-2 sm:gap-3 mt-4">
               <Button
                 variant="outline"
-                className="w-10 h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
               >
                 <Image src={googleLogo} alt="Google" width={20} height={20} />
               </Button>
               <Button
                 variant="outline"
-                className="w-10 h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
               >
                 <Image src={appleLogo} alt="Apple" width={20} height={20} />
               </Button>
               <Button
                 variant="outline"
-                className="w-10 h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
               >
                 <Image
                   src={facebookLogo}

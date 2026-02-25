@@ -1,17 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  LayoutDashboard,
   Calendar,
   Users,
   Building2,
-  Ticket,
-  Briefcase,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Home,
   Gamepad2,
   Gift,
   Activity,
@@ -30,7 +26,21 @@ import {
   Mail,
   Truck,
   Wrench,
+  Menu,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ACCOUNT_TYPES = [
   {
@@ -64,7 +74,7 @@ const NAV_ITEMS = {
   personal: [
     { label: "Overview", href: "/", icon: TrendingUp },
     { label: "Games", href: "/games", icon: Gamepad2 },
-    { label: "Rewards", href: "/rewards", icon: Gift },
+    { label: "Business & Rewards", href: "/rewards", icon: Gift },
     { label: "Activity", href: "/activity", icon: Activity },
     { label: "Events", href: "/events", icon: Calendar },
     { label: "Notifications", href: "/notifications", icon: Bell },
@@ -123,8 +133,6 @@ const NAV_ITEMS = {
   ],
 };
 
-const DROPDOWN_ANIMATION_MS = 200;
-
 interface SideBarProps {
   onNavigate?: (path: string) => void;
   currentPath?: string;
@@ -140,6 +148,7 @@ export default function SideBar({
 }: SideBarProps) {
   const [uncontrolledExpanded, setUncontrolledExpanded] = useState(true);
   const expanded = controlledExpanded ?? uncontrolledExpanded;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Notify parent of expanded state changes
   const handleExpandedChange = (newExpanded: boolean) => {
@@ -147,225 +156,256 @@ export default function SideBar({
     onExpandedChange?.(newExpanded);
   };
   const [accountTypeId, setAccountTypeId] = useState<string>("personal");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownClosing, setDropdownClosing] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedAccount =
     ACCOUNT_TYPES.find((a) => a.id === accountTypeId) ?? ACCOUNT_TYPES[0];
   const currentNavItems =
     NAV_ITEMS[accountTypeId as keyof typeof NAV_ITEMS] ?? NAV_ITEMS.personal;
 
-  // Run close animation then unmount
-  useEffect(() => {
-    if (!dropdownClosing) return;
-    const id = setTimeout(() => {
-      setDropdownOpen(false);
-      setDropdownClosing(false);
-    }, DROPDOWN_ANIMATION_MS);
-    return () => clearTimeout(id);
-  }, [dropdownClosing]);
+  const handleAccountTypeChange = (nextAccountTypeId: string) => {
+    setAccountTypeId(nextAccountTypeId);
+    const overviewPath =
+      NAV_ITEMS[nextAccountTypeId as keyof typeof NAV_ITEMS]?.[0]?.href ?? "/";
+    onNavigate?.(overviewPath);
+    setMobileMenuOpen(false);
+  };
 
-  const closeDropdown = useCallback(() => {
-    if (!dropdownOpen) return;
-    setDropdownClosing(true);
-  }, [dropdownOpen]);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
-    if (!dropdownOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        closeDropdown();
-      }
+    const handleOpenAccountType = (event: Event) => {
+      const customEvent = event as CustomEvent<{ accountTypeId?: string }>;
+      const nextAccountTypeId = customEvent.detail?.accountTypeId;
+      if (!nextAccountTypeId) return;
+      if (!(nextAccountTypeId in NAV_ITEMS)) return;
+      handleAccountTypeChange(nextAccountTypeId);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownOpen, closeDropdown]);
+
+    window.addEventListener(
+      "whodini:open-account-type",
+      handleOpenAccountType as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "whodini:open-account-type",
+        handleOpenAccountType as EventListener,
+      );
+    };
+  }, []);
 
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen flex flex-col items-center py-8 shadow-xl bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] overflow-hidden transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] z-40 ${
-        expanded ? "w-64" : "w-[4.5rem]"
-      }`}
-    >
-      <div
-        className={`mb-4 flex flex-col items-center w-full flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
-        ref={dropdownRef}
-      >
-        {/* Account type dropdown */}
-        <div className="relative w-full flex justify-center">
-          <button
-            type="button"
-            onClick={() => {
-              if (dropdownOpen) closeDropdown();
-              else {
-                setDropdownClosing(false);
-                setDropdownOpen(true);
-              }
-            }}
-            className={`flex items-center gap-3 py-2.5 bg-white/95 rounded-xl shadow-md ring-1 ring-black/5 hover:bg-white transition text-left ${
-              expanded ? "w-full px-4" : "w-10 h-10 justify-center px-0"
-            }`}
-            aria-expanded={dropdownOpen}
-            aria-haspopup="listbox"
-            aria-label={`Account type: ${selectedAccount.label}`}
-            title={!expanded ? selectedAccount.label : undefined}
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff5f6d]/20 to-[#ffc371]/30 text-[#c24150] font-bold text-sm">
-              {selectedAccount.initials}
-            </span>
-            {expanded && (
-              <>
-                <div className="flex-1 min-w-0">
-                  <div className="text-base font-medium text-neutral-900 truncate">
-                    {selectedAccount.label}
-                  </div>
-                  <div className="text-xs text-neutral-500 truncate">
-                    {selectedAccount.digitalId}
+    <>
+      {/* Tablet + Mobile Header */}
+      <header className="xl:hidden fixed top-0 left-0 right-0 z-40 h-16 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] px-3 sm:px-4 border-b border-white/20">
+        <div className="h-full flex items-center justify-between gap-3">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-white/30 bg-white/15 text-white hover:bg-white/25 transition"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </SheetTrigger>
+
+            <SheetContent
+              side="left"
+              className="p-0 w-[88vw] max-w-sm border-r-0 bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] text-white"
+            >
+              <div className="h-full flex flex-col min-h-0">
+                <div className="p-4 border-b border-white/20">
+                  <div className="text-sm font-semibold mb-2">Account Type</div>
+                  <Select
+                    value={accountTypeId}
+                    onValueChange={handleAccountTypeChange}
+                  >
+                    <SelectTrigger className="w-full bg-white text-neutral-900 border-white/50">
+                      <SelectValue placeholder="Select account type" />
+                    </SelectTrigger>
+                    <SelectContent className="z-[60]">
+                      {ACCOUNT_TYPES.map((type) => (
+                        <SelectItem key={type.id} value={type.id}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="mt-2 text-xs text-white/85 truncate">
+                    {
+                      ACCOUNT_TYPES.find((type) => type.id === accountTypeId)
+                        ?.digitalId
+                    }
                   </div>
                 </div>
-                <svg
-                  className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </>
-            )}
-          </button>
 
-          {/* Dropdown panel - position to the right when collapsed */}
-          {dropdownOpen && (
-            <ul
-              role="listbox"
-              aria-label="Account type options"
-              className={`absolute py-1.5 bg-white rounded-xl shadow-lg ring-1 ring-black/10 overflow-hidden z-50 origin-top transition-all duration-200 ease-out ${
-                expanded
-                  ? "left-0 right-0 top-full mt-1.5"
-                  : "left-full top-0 ml-1.5 min-w-[12rem]"
-              } ${
-                dropdownClosing
-                  ? "opacity-0 scale-[0.96] -translate-y-1"
-                  : "opacity-100 scale-100 translate-y-0"
-              }`}
-            >
-              {ACCOUNT_TYPES.map((type) => {
-                const isSelected = type.id === accountTypeId;
-                return (
-                  <li key={type.id} role="option" aria-selected={isSelected}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAccountTypeId(type.id);
-                        closeDropdown();
-                      }}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition ${
-                        isSelected
-                          ? "bg-[#ff5f6d] text-white font-medium"
-                          : "text-neutral-800 hover:bg-neutral-100"
-                      }`}
-                    >
-                      <span
-                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                          isSelected
-                            ? "bg-white/25 text-white"
-                            : "bg-neutral-200 text-neutral-600"
-                        }`}
-                      >
-                        {type.initials}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm truncate">{type.label}</div>
-                        <div
-                          className={`text-xs truncate ${
-                            isSelected ? "text-white/70" : "text-neutral-500"
+                <nav className="flex-1 overflow-y-auto p-3 space-y-2">
+                  {currentNavItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = currentPath === item.href;
+                    return (
+                      <SheetClose asChild key={item.href}>
+                        <button
+                          type="button"
+                          onClick={() => onNavigate?.(item.href)}
+                          className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
+                            isActive
+                              ? "bg-white/25 ring-1 ring-white/40"
+                              : "hover:bg-white/15"
                           }`}
                         >
-                          {type.digitalId}
-                        </div>
-                      </div>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                          <Icon className="w-5 h-5 shrink-0" aria-hidden />
+                          <span className="font-medium">{item.label}</span>
+                        </button>
+                      </SheetClose>
+                    );
+                  })}
+                </nav>
+
+                <div className="p-3 border-t border-white/20">
+                  <button
+                    type="button"
+                    title="Sign out"
+                    className="w-full flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition py-2.5 gap-2"
+                  >
+                    <LogOut className="w-5 h-5 shrink-0" aria-hidden />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          <div className="min-w-0 flex-1">
+            <div className="text-white font-semibold truncate">Whodini</div>
+            <div className="text-white/80 text-xs truncate">
+              {selectedAccount.label}
+            </div>
+          </div>
+
+          <div className="w-36 sm:w-44">
+            <Select
+              value={accountTypeId}
+              onValueChange={handleAccountTypeChange}
+            >
+              <SelectTrigger className="h-9 w-full bg-white text-neutral-900 border-white/50">
+                <SelectValue placeholder="Account" />
+              </SelectTrigger>
+              <SelectContent className="z-[60]">
+                {ACCOUNT_TYPES.map((type) => (
+                  <SelectItem key={type.id} value={type.id}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Scrollable Navigation Section */}
-      <div className="flex-1 overflow-y-scroll overflow-x-hidden w-full min-h-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <nav
-          className={`flex flex-col gap-2 w-full pb-4 ${expanded ? "px-4" : "px-2 items-center"}`}
-        >
-          {currentNavItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentPath === item.href;
-            return (
-              <button
-                key={item.href}
-                onClick={() => onNavigate?.(item.href)}
-                title={!expanded ? item.label : undefined}
-                className={`text-white font-medium rounded-xl transition flex items-center gap-3 ${
-                  isActive
-                    ? "bg-white/20 ring-1 ring-white/30"
-                    : "hover:bg-white/10"
-                } ${
-                  expanded
-                    ? "py-2 px-4 w-full text-left"
-                    : "w-10 h-10 justify-center p-0"
-                }`}
-              >
-                <Icon className="w-5 h-5 shrink-0" aria-hidden />
-                {expanded && <span>{item.label}</span>}
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div
-        className={`w-full flex flex-col items-center gap-2 flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
+      {/* Desktop Sidebar */}
+      <aside
+        className={`hidden xl:flex fixed left-0 top-0 h-screen flex-col items-center py-8 shadow-xl bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] overflow-hidden transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] z-40 ${
+          expanded ? "w-64" : "w-[4.5rem]"
+        }`}
       >
-        <button
-          type="button"
-          onClick={() => handleExpandedChange(!expanded)}
-          className={`flex items-center justify-center text-white rounded-xl border border-white/30 hover:bg-white/20 transition ${
-            expanded ? "w-full py-2 gap-2" : "w-10 h-10"
-          }`}
-          aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-          title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+        <div
+          className={`mb-4 flex flex-col items-center w-full flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
         >
-          {expanded ? (
-            <ChevronLeft className="w-5 h-5 shrink-0" />
-          ) : (
-            <ChevronRight className="w-5 h-5 shrink-0" />
-          )}
-          {expanded && <span className="font-semibold text-sm">Collapse</span>}
-        </button>
-        <button
-          type="button"
-          title="Sign out"
-          className={`flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition ${
-            expanded ? "w-full py-2 gap-2" : "w-10 h-10"
-          }`}
+          <div className="w-full">
+            <Select
+              value={accountTypeId}
+              onValueChange={handleAccountTypeChange}
+            >
+              <SelectTrigger
+                className={`bg-white text-neutral-900 border-white/50 ${
+                  expanded ? "w-full" : "w-10 h-10 p-0 justify-center"
+                }`}
+                aria-label={`Account type: ${selectedAccount.label}`}
+                title={!expanded ? selectedAccount.label : undefined}
+              >
+                {expanded ? (
+                  <SelectValue placeholder="Select account type" />
+                ) : (
+                  <span className="font-bold text-xs">{selectedAccount.initials}</span>
+                )}
+              </SelectTrigger>
+              <SelectContent className="z-[60]">
+                {ACCOUNT_TYPES.map((type) => (
+                  <SelectItem key={type.id} value={type.id}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {expanded && (
+              <div className="mt-2 px-1 text-xs text-white/85 truncate">
+                {selectedAccount.digitalId}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-scroll overflow-x-hidden w-full min-h-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <nav
+            className={`flex flex-col gap-2 w-full pb-4 ${expanded ? "px-4" : "px-2 items-center"}`}
+          >
+            {currentNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentPath === item.href;
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => onNavigate?.(item.href)}
+                  title={!expanded ? item.label : undefined}
+                  className={`text-white font-medium rounded-xl transition flex items-center gap-3 ${
+                    isActive
+                      ? "bg-white/20 ring-1 ring-white/30"
+                      : "hover:bg-white/10"
+                  } ${
+                    expanded
+                      ? "py-2 px-4 w-full text-left"
+                      : "w-10 h-10 justify-center p-0"
+                  }`}
+                >
+                  <Icon className="w-5 h-5 shrink-0" aria-hidden />
+                  {expanded && <span>{item.label}</span>}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div
+          className={`w-full flex flex-col items-center gap-2 flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
         >
-          <LogOut className="w-5 h-5 shrink-0" aria-hidden />
-          {expanded && <span>Sign Out</span>}
-        </button>
-      </div>
-    </aside>
+          <button
+            type="button"
+            onClick={() => handleExpandedChange(!expanded)}
+            className={`flex items-center justify-center text-white rounded-xl border border-white/30 hover:bg-white/20 transition ${
+              expanded ? "w-full py-2 gap-2" : "w-10 h-10"
+            }`}
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            {expanded ? (
+              <ChevronLeft className="w-5 h-5 shrink-0" />
+            ) : (
+              <ChevronRight className="w-5 h-5 shrink-0" />
+            )}
+            {expanded && <span className="font-semibold text-sm">Collapse</span>}
+          </button>
+          <button
+            type="button"
+            title="Sign out"
+            className={`flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition ${
+              expanded ? "w-full py-2 gap-2" : "w-10 h-10"
+            }`}
+          >
+            <LogOut className="w-5 h-5 shrink-0" aria-hidden />
+            {expanded && <span>Sign Out</span>}
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

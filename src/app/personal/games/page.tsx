@@ -10,14 +10,9 @@ import {
   Users,
   Target,
   Zap,
-  Gift,
-  Medal,
-  Crown,
-  TrendingUp,
   Calendar,
-  CheckCircle,
-  Lock,
   Flame,
+  Lock as LockIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,8 +31,8 @@ const gameCategories = [
         description: "Test your knowledge about latest tech trends",
         difficulty: "Medium",
         duration: "5 min",
-        points: 50,
-        players: 1250,
+        points: 0,
+        players: 0,
         status: "available",
         image: "🧠",
       },
@@ -48,8 +43,8 @@ const gameCategories = [
         description: "How well do you know current fashion?",
         difficulty: "Easy",
         duration: "3 min",
-        points: 30,
-        players: 890,
+        points: 0,
+        players: 0,
         status: "available",
         image: "👗",
       },
@@ -60,8 +55,8 @@ const gameCategories = [
         description: "From beans to brewing methods",
         difficulty: "Hard",
         duration: "7 min",
-        points: 75,
-        players: 560,
+        points: 0,
+        players: 0,
         status: "available",
         image: "☕",
       },
@@ -79,8 +74,8 @@ const gameCategories = [
         description: "Match brand logos and earn points",
         difficulty: "Medium",
         duration: "4 min",
-        points: 40,
-        players: 720,
+        points: 0,
+        players: 0,
         status: "available",
         image: "🧩",
       },
@@ -91,8 +86,8 @@ const gameCategories = [
         description: "Find hidden product names",
         difficulty: "Easy",
         duration: "6 min",
-        points: 35,
-        players: 940,
+        points: 0,
+        players: 0,
         status: "new",
         image: "🔍",
       },
@@ -103,8 +98,8 @@ const gameCategories = [
         description: "Technology-themed crossword puzzle",
         difficulty: "Hard",
         duration: "10 min",
-        points: 80,
-        players: 320,
+        points: 0,
+        players: 0,
         status: "available",
         image: "📝",
       },
@@ -122,8 +117,8 @@ const gameCategories = [
         description: "Complete daily fitness tasks",
         difficulty: "Medium",
         duration: "Daily",
-        points: 100,
-        players: 1580,
+        points: 0,
+        players: 0,
         status: "ongoing",
         image: "💪",
       },
@@ -134,8 +129,8 @@ const gameCategories = [
         description: "Take sustainable actions for points",
         difficulty: "Easy",
         duration: "Weekly",
-        points: 150,
-        players: 2100,
+        points: 0,
+        players: 0,
         status: "available",
         image: "🌱",
       },
@@ -146,8 +141,8 @@ const gameCategories = [
         description: "Share creative product photos",
         difficulty: "Medium",
         duration: "1 week",
-        points: 200,
-        players: 675,
+        points: 0,
+        players: 0,
         status: "ending_soon",
         image: "📸",
       },
@@ -160,27 +155,27 @@ const dailyChallenges = [
     id: 1,
     title: "Brand Discovery",
     description: "Explore 3 new brands today",
-    progress: 2,
-    target: 3,
-    points: 25,
+    progress: 0,
+    target: 0,
+    points: 0,
     status: "active",
   },
   {
     id: 2,
     title: "Community Engagement",
     description: "Comment on 2 community posts",
-    progress: 1,
-    target: 2,
-    points: 20,
+    progress: 0,
+    target: 0,
+    points: 0,
     status: "active",
   },
-  {
+  { 
     id: 3,
     title: "Game Master",
     description: "Play 5 games today",
-    progress: 3,
-    target: 5,
-    points: 50,
+    progress: 0,
+    target: 0,
+    points: 0,
     status: "active",
   },
 ];
@@ -195,12 +190,12 @@ const leaderboard = [
 ];
 
 const userStats = {
-  gamesPlayed: 24,
-  totalPoints: 2450,
-  currentStreak: 7,
+  gamesPlayed: 0,
+  totalPoints: 0,
+  currentStreak: 0,
   favoriteCategory: "Trivia",
-  rank: 6,
-  achievements: 8,
+  rank: 0,
+  achievements: 0,
 };
 
 type CategoryType = "trivia" | "puzzles" | "challenges";
@@ -208,6 +203,8 @@ type CategoryType = "trivia" | "puzzles" | "challenges";
 export default function GamesPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryType>("trivia");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const gamesComingSoon = true;
+  const leaderboardComingSoon = true;
 
   const currentCategory = gameCategories.find(
     (cat) => cat.id === activeCategory,
@@ -244,16 +241,16 @@ export default function GamesPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
         <Gamepad2 className="w-6 h-6 text-[#ff5f6d]" />
-        <h1 className="text-2xl font-semibold">Games & Challenges</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold">Games & Challenges</h1>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-[#ff5f6d] mb-1">
               {userStats.gamesPlayed}
@@ -262,7 +259,7 @@ export default function GamesPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-500 mb-1">
               {userStats.totalPoints.toLocaleString()}
@@ -271,7 +268,7 @@ export default function GamesPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <Flame className="w-4 h-4 text-orange-500" />
@@ -283,7 +280,7 @@ export default function GamesPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-yellow-500 mb-1">
               #{userStats.rank}
@@ -292,7 +289,7 @@ export default function GamesPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-500 mb-1">
               {userStats.achievements}
@@ -301,7 +298,7 @@ export default function GamesPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
+        <Card className="p-3 sm:p-4 border border-neutral-200 rounded-xl bg-white shadow-sm">
           <div className="text-center">
             <div className="text-sm font-bold text-blue-500 mb-1">
               {userStats.favoriteCategory}
@@ -312,17 +309,17 @@ export default function GamesPage() {
       </div>
 
       {/* Daily Challenges */}
-      <Card className="p-6 border border-neutral-200 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50">
-        <div className="flex items-center gap-3 mb-4">
+      <Card className="p-4 sm:p-6 border border-neutral-200 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
           <Calendar className="w-5 h-5 text-purple-500" />
           <h3 className="font-semibold text-neutral-900">Daily Challenges</h3>
           <Badge className="bg-purple-500 text-white text-xs">24h</Badge>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {dailyChallenges.map((challenge) => (
             <Card
               key={challenge.id}
-              className="p-4 border border-purple-200 bg-white/60"
+              className="p-3 sm:p-4 border border-purple-200 bg-white/60"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
@@ -360,10 +357,10 @@ export default function GamesPage() {
 
       {/* Navigation Tabs */}
       <div className="flex gap-1 mb-6">
-        <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg">
+        <div className="flex w-full sm:w-fit gap-1 p-1 bg-neutral-100 rounded-lg">
           <button
             onClick={() => setShowLeaderboard(false)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
               !showLeaderboard
                 ? "bg-white text-[#ff5f6d] shadow-sm"
                 : "text-neutral-600 hover:text-neutral-900"
@@ -373,7 +370,7 @@ export default function GamesPage() {
           </button>
           <button
             onClick={() => setShowLeaderboard(true)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
               showLeaderboard
                 ? "bg-white text-[#ff5f6d] shadow-sm"
                 : "text-neutral-600 hover:text-neutral-900"
@@ -387,12 +384,12 @@ export default function GamesPage() {
       {!showLeaderboard ? (
         <div>
           {/* Game Category Tabs */}
-          <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-fit mb-6">
+          <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg w-full sm:w-fit mb-6 overflow-x-auto">
             {gameCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id as CategoryType)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
                   activeCategory === category.id
                     ? "bg-white text-[#ff5f6d] shadow-sm"
                     : "text-neutral-600 hover:text-neutral-900"
@@ -409,9 +406,9 @@ export default function GamesPage() {
             {currentCategory?.games.map((game) => (
               <Card
                 key={game.id}
-                className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
+                className="relative overflow-hidden border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-3xl">{game.image}</div>
                     <div className="flex flex-col gap-1">
@@ -450,13 +447,26 @@ export default function GamesPage() {
                     </span>
                     <Button
                       size="sm"
+                      disabled={gamesComingSoon}
                       className="bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
                     >
                       <Play className="w-3 h-3 mr-1" />
-                      Play Now
+                      {gamesComingSoon ? "Locked" : "Play Now"}
                     </Button>
                   </div>
                 </CardContent>
+
+                {gamesComingSoon && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-white/85 backdrop-blur-[2px] text-center px-3 sm:px-4">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-neutral-900 text-white px-3 py-1.5 text-xs font-semibold">
+                      <LockIcon className="w-3.5 h-3.5" />
+                      Coming Soon
+                    </div>
+                    <p className="text-xs sm:text-sm text-neutral-700 font-medium">
+                      Games are not accessible yet
+                    </p>
+                  </div>
+                )}
               </Card>
             ))}
           </div>
@@ -464,50 +474,28 @@ export default function GamesPage() {
       ) : (
         /* Leaderboard View */
         <div>
-          <Card className="border border-neutral-200 rounded-xl bg-white shadow-sm">
+          <Card className="relative overflow-hidden border border-neutral-200 rounded-xl bg-white shadow-sm">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3">
                 <Trophy className="w-5 h-5 text-yellow-500" />
                 <CardTitle className="text-lg">Global Leaderboard</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {leaderboard.map((player) => (
-                <div
-                  key={player.rank}
-                  className={`flex items-center justify-between p-4 rounded-lg border ${
-                    player.isUser
-                      ? "border-[#ff5f6d] bg-[#ff5f6d]/5"
-                      : "border-neutral-200 bg-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`text-lg font-bold ${
-                        player.rank <= 3
-                          ? "text-yellow-500"
-                          : "text-neutral-500"
-                      }`}
-                    >
-                      #{player.rank}
-                    </div>
-                    <div className="text-2xl">{player.badge}</div>
-                    <div>
-                      <div
-                        className={`font-medium ${
-                          player.isUser ? "text-[#ff5f6d]" : "text-neutral-900"
-                        }`}
-                      >
-                        {player.name}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold text-neutral-900">
-                    {player.score.toLocaleString()} pts
-                  </div>
-                </div>
-              ))}
+            <CardContent>
+              <div className="h-40" />
             </CardContent>
+
+            {leaderboardComingSoon && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-white/90 backdrop-blur-[2px] text-center px-3 sm:px-4">
+                <div className="inline-flex items-center gap-2 rounded-full bg-neutral-900 text-white px-3 py-1.5 text-xs font-semibold">
+                  <LockIcon className="w-3.5 h-3.5" />
+                  Coming Soon
+                </div>
+                <p className="text-xs sm:text-sm text-neutral-700 font-medium">
+                  Leaderboard is not accessible yet
+                </p>
+              </div>
+            )}
           </Card>
         </div>
       )}

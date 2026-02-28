@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { RequireSession } from "@/components/app/RequireSession";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   Upload,
   Building2,
@@ -24,27 +23,29 @@ import {
   Instagram,
   Twitter,
   Linkedin,
+  Music2,
   Save,
-} from "lucide-react";
-import Image from "next/image";
+} from 'lucide-react';
+import Image from 'next/image';
 
 export default function BusinessSetupPage() {
   const [formData, setFormData] = useState({
-    businessName: "",
-    description: "",
-    category: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
-    phone: "",
-    email: "",
-    website: "",
-    facebook: "",
-    instagram: "",
-    twitter: "",
-    linkedin: "",
+    businessName: '',
+    description: '',
+    category: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+    phone: '',
+    email: '',
+    website: '',
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    tiktok: '',
+    linkedin: '',
   });
 
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -67,16 +68,16 @@ export default function BusinessSetupPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Demo purpose - just log the data
-    console.log("Business setup data:", formData);
-    alert("Business setup completed! (Demo)");
+    console.log('Business setup data:', formData);
+    alert('Business setup completed! (Demo)');
   };
 
   return (
-    <RequireSession>
-      <div className="p-6 space-y-8 min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="mx-auto w-full max-w-6xl space-y-6 sm:space-y-8">
         {/* Header Section */}
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-neutral-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900">
             Business Setup
           </h1>
           <p className="text-neutral-600">
@@ -97,7 +98,7 @@ export default function BusinessSetupPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
                 <div className="relative">
                   {logoPreview ? (
                     <Image
@@ -113,12 +114,15 @@ export default function BusinessSetupPage() {
                     </div>
                   )}
                 </div>
-                <div>
-                  <Label htmlFor="logo-upload" className="inline-block">
+                <div className="w-full sm:w-auto">
+                  <Label
+                    htmlFor="logo-upload"
+                    className="inline-block w-full sm:w-auto"
+                  >
                     <Button
                       type="button"
                       variant="outline"
-                      className="cursor-pointer"
+                      className="w-full cursor-pointer sm:w-auto"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       Upload Logo
@@ -154,7 +158,7 @@ export default function BusinessSetupPage() {
                     placeholder="Enter your business name"
                     value={formData.businessName}
                     onChange={(e) =>
-                      handleInputChange("businessName", e.target.value)
+                      handleInputChange('businessName', e.target.value)
                     }
                     className="mt-1"
                     required
@@ -167,7 +171,7 @@ export default function BusinessSetupPage() {
                     placeholder="Briefly describe your business..."
                     value={formData.description}
                     onChange={(e) =>
-                      handleInputChange("description", e.target.value)
+                      handleInputChange('description', e.target.value)
                     }
                     className="mt-1 w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     rows={3}
@@ -180,7 +184,7 @@ export default function BusinessSetupPage() {
                     placeholder="e.g., Technology, Retail, etc."
                     value={formData.category}
                     onChange={(e) =>
-                      handleInputChange("category", e.target.value)
+                      handleInputChange('category', e.target.value)
                     }
                     className="mt-1"
                   />
@@ -207,7 +211,7 @@ export default function BusinessSetupPage() {
                     placeholder="Enter your business address"
                     value={formData.address}
                     onChange={(e) =>
-                      handleInputChange("address", e.target.value)
+                      handleInputChange('address', e.target.value)
                     }
                     className="mt-1"
                   />
@@ -218,7 +222,7 @@ export default function BusinessSetupPage() {
                     id="city"
                     placeholder="City"
                     value={formData.city}
-                    onChange={(e) => handleInputChange("city", e.target.value)}
+                    onChange={(e) => handleInputChange('city', e.target.value)}
                     className="mt-1"
                   />
                 </div>
@@ -228,7 +232,7 @@ export default function BusinessSetupPage() {
                     id="state"
                     placeholder="State"
                     value={formData.state}
-                    onChange={(e) => handleInputChange("state", e.target.value)}
+                    onChange={(e) => handleInputChange('state', e.target.value)}
                     className="mt-1"
                   />
                 </div>
@@ -239,7 +243,7 @@ export default function BusinessSetupPage() {
                     placeholder="ZIP Code"
                     value={formData.zipCode}
                     onChange={(e) =>
-                      handleInputChange("zipCode", e.target.value)
+                      handleInputChange('zipCode', e.target.value)
                     }
                     className="mt-1"
                   />
@@ -251,7 +255,7 @@ export default function BusinessSetupPage() {
                     placeholder="Country"
                     value={formData.country}
                     onChange={(e) =>
-                      handleInputChange("country", e.target.value)
+                      handleInputChange('country', e.target.value)
                     }
                     className="mt-1"
                   />
@@ -265,7 +269,7 @@ export default function BusinessSetupPage() {
                     id="phone"
                     placeholder="+1 (555) 123-4567"
                     value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
                     className="mt-1"
                   />
                 </div>
@@ -279,7 +283,7 @@ export default function BusinessSetupPage() {
                     type="email"
                     placeholder="business@example.com"
                     value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
                     className="mt-1"
                   />
                 </div>
@@ -310,7 +314,7 @@ export default function BusinessSetupPage() {
                     placeholder="https://www.yourbusiness.com"
                     value={formData.website}
                     onChange={(e) =>
-                      handleInputChange("website", e.target.value)
+                      handleInputChange('website', e.target.value)
                     }
                     className="mt-1"
                   />
@@ -330,7 +334,7 @@ export default function BusinessSetupPage() {
                       placeholder="https://facebook.com/yourbusiness"
                       value={formData.facebook}
                       onChange={(e) =>
-                        handleInputChange("facebook", e.target.value)
+                        handleInputChange('facebook', e.target.value)
                       }
                       className="mt-1"
                     />
@@ -348,7 +352,7 @@ export default function BusinessSetupPage() {
                       placeholder="https://instagram.com/yourbusiness"
                       value={formData.instagram}
                       onChange={(e) =>
-                        handleInputChange("instagram", e.target.value)
+                        handleInputChange('instagram', e.target.value)
                       }
                       className="mt-1"
                     />
@@ -366,7 +370,7 @@ export default function BusinessSetupPage() {
                       placeholder="https://twitter.com/yourbusiness"
                       value={formData.twitter}
                       onChange={(e) =>
-                        handleInputChange("twitter", e.target.value)
+                        handleInputChange('twitter', e.target.value)
                       }
                       className="mt-1"
                     />
@@ -384,7 +388,22 @@ export default function BusinessSetupPage() {
                       placeholder="https://linkedin.com/company/yourbusiness"
                       value={formData.linkedin}
                       onChange={(e) =>
-                        handleInputChange("linkedin", e.target.value)
+                        handleInputChange('linkedin', e.target.value)
+                      }
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="tiktok" className="flex items-center gap-2">
+                      <Music2 className="w-4 h-4 text-neutral-900" />
+                      TikTok
+                    </Label>
+                    <Input
+                      id="tiktok"
+                      placeholder="https://www.tiktok.com/@yourbusiness"
+                      value={formData.tiktok}
+                      onChange={(e) =>
+                        handleInputChange('tiktok', e.target.value)
                       }
                       className="mt-1"
                     />
@@ -395,17 +414,21 @@ export default function BusinessSetupPage() {
           </Card>
 
           {/* Submit Button */}
-          <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
-            <Button type="submit">
+            <Button type="submit" className="w-full sm:w-auto">
               <Save className="w-4 h-4 mr-2" />
               Save Business Profile
             </Button>
           </div>
         </form>
       </div>
-    </RequireSession>
+    </div>
   );
 }

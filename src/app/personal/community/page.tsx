@@ -1,16 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Users,
-  MessageSquare,
-  Sparkles,
-  Search,
-  Heart,
-  MapPin,
-  Calendar,
-  Eye,
-} from 'lucide-react';
+import { Users, MessageSquare, Search, Heart, MapPin, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -46,36 +37,6 @@ const mockData = {
       timestamp: '1 day ago',
       likes: 32,
       image: '💪',
-    },
-  ],
-  showcase: [
-    {
-      id: 1,
-      community: 'Photography Club',
-      title: 'Monthly Photo Contest',
-      description:
-        'Submit your best nature photography for our February contest.',
-      image: '📸',
-      participants: 156,
-      deadline: '5 days left',
-    },
-    {
-      id: 2,
-      community: 'Cooking Masters',
-      title: 'Recipe Share Week',
-      description: "Share your family's secret recipes with the community.",
-      image: '👨‍🍳',
-      participants: 89,
-      deadline: '2 weeks left',
-    },
-    {
-      id: 3,
-      community: 'Book Lovers',
-      title: 'February Book Club',
-      description: "Currently reading 'The Midnight Library' by Matt Haig.",
-      image: '📚',
-      participants: 67,
-      deadline: '1 month left',
     },
   ],
   discover: [
@@ -119,7 +80,7 @@ const mockData = {
   ],
 };
 
-type TabType = 'messages' | 'showcase' | 'discover';
+type TabType = 'messages' | 'discover';
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState<TabType>('messages');
@@ -251,7 +212,6 @@ export default function CommunityPage() {
 
   const tabs = [
     { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'showcase', label: 'Showcase', icon: Sparkles },
     { id: 'discover', label: 'Discover', icon: Search },
   ];
 
@@ -318,56 +278,6 @@ export default function CommunityPage() {
                   className="text-xs w-full sm:w-auto"
                 >
                   Reply
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  };
-
-  const renderShowcase = () => {
-    return (
-      <div className="space-y-3 sm:space-y-4">
-        {mockData.showcase.map((item) => (
-          <Card
-            key={item.id}
-            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
-          >
-            <CardHeader className="pb-3 sm:pb-4">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="text-3xl">{item.image}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      {item.community}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-neutral-900 mb-2">
-                    {item.title}
-                  </CardTitle>
-                  <p className="text-sm text-neutral-600 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-neutral-500">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{item.participants} participants</span>
-                  </div>
-                  <span>•</span>
-                  <span>{item.deadline}</span>
-                </div>
-                <Button
-                  size="sm"
-                  className="text-xs w-full sm:w-auto bg-[#ff5f6d] hover:bg-[#ff5f6d]/90"
-                >
-                  Join
                 </Button>
               </div>
             </CardContent>
@@ -527,8 +437,6 @@ export default function CommunityPage() {
     switch (activeTab) {
       case 'messages':
         return renderMessages();
-      case 'showcase':
-        return renderShowcase();
       case 'discover':
         return renderDiscover();
       default:

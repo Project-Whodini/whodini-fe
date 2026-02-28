@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Calendar,
   Users,
@@ -27,109 +27,113 @@ import {
   Truck,
   Wrench,
   Menu,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetClose,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 const ACCOUNT_TYPES = [
   {
-    id: "personal",
-    label: "Personal Account",
-    initials: "PA",
-    digitalId: "WD-P-x8m9n2k5",
+    id: 'personal',
+    label: 'Personal Account',
+    initials: 'PA',
+    digitalId: 'WD-P-x8m9n2k5',
   },
   {
-    id: "business",
-    label: "Business/Brand",
-    initials: "BB",
-    digitalId: "WD-B-a42741f6",
+    id: 'business',
+    label: 'Business/Brand',
+    initials: 'BB',
+    digitalId: 'WD-B-a42741f6',
   },
   {
-    id: "community",
-    label: "Community/Organization",
-    initials: "CO",
-    digitalId: "WD-C-aee090b3",
+    id: 'community',
+    label: 'Community/Organization',
+    initials: 'CO',
+    digitalId: 'WD-C-aee090b3',
   },
   {
-    id: "event",
-    label: "Event Organizer",
-    initials: "EO",
-    digitalId: "WD-O-85203475",
+    id: 'event',
+    label: 'Event Organizer',
+    initials: 'EO',
+    digitalId: 'WD-O-85203475',
   },
-  { id: "agency", label: "Agency", initials: "AG", digitalId: "WD-A-23dd8aa4" },
+  { id: 'agency', label: 'Agency', initials: 'AG', digitalId: 'WD-A-23dd8aa4' },
 ] as const;
 
 const NAV_ITEMS = {
   personal: [
-    { label: "Overview", href: "/", icon: TrendingUp },
-    { label: "Games", href: "/games", icon: Gamepad2 },
-    { label: "Business & Rewards", href: "/rewards", icon: Gift },
-    { label: "Activity", href: "/activity", icon: Activity },
-    { label: "Events", href: "/events", icon: Calendar },
-    { label: "Notifications", href: "/notifications", icon: Bell },
-    { label: "Community", href: "/community", icon: Users },
-    { label: "Memberships", href: "/memberships", icon: Crown },
-    { label: "Subscriptions", href: "/subscriptions", icon: CreditCard },
+    { label: 'Overview', href: '/', icon: TrendingUp },
+    { label: 'Games', href: '/games', icon: Gamepad2 },
+    { label: 'Business & Rewards', href: '/rewards', icon: Gift },
+    { label: 'Activity', href: '/activity', icon: Activity },
+    { label: 'Events', href: '/events', icon: Calendar },
+    { label: 'Notifications', href: '/notifications', icon: Bell },
+    { label: 'Community', href: '/community', icon: Users },
+    { label: 'Memberships', href: '/memberships', icon: Crown },
+    { label: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
   ],
   business: [
-    { label: "Overview", href: "/business/overview", icon: TrendingUp },
-    { label: "Events", href: "/business/events", icon: Calendar },
-    { label: "Brands", href: "/business/brands", icon: Building2 },
-    { label: "Services", href: "/business/services", icon: Settings },
-    { label: "Subscribers", href: "/business/subscribers", icon: UserCheck },
-    { label: "Team", href: "/business/team", icon: Users },
+    { label: 'Overview', href: '/business/overview', icon: TrendingUp },
+    { label: 'Events', href: '/business/events', icon: Calendar },
+    { label: 'Brands', href: '/business/brands', icon: Building2 },
     {
-      label: "Create Notification",
-      href: "/business/notifications/create",
+      label: 'Services & Products',
+      href: '/business/services',
+      icon: Settings,
+    },
+    { label: 'Subscribers', href: '/business/subscribers', icon: UserCheck },
+    { label: 'Team', href: '/business/team', icon: Users },
+    {
+      label: 'Create Notification',
+      href: '/business/notifications/create',
       icon: Plus,
     },
-    { label: "History", href: "/business/history", icon: History },
-    { label: "Setup", href: "/business/setup", icon: Wrench },
+    { label: 'History', href: '/business/history', icon: History },
+    // { label: 'Setup', href: '/business/setup', icon: Wrench },
 
-    { label: "Settings", href: "/business/settings", icon: Cog },
+    { label: 'Settings', href: '/business/settings', icon: Cog },
   ],
   community: [
-    { label: "Overview", href: "/community/overview", icon: TrendingUp },
-    { label: "Events", href: "/community/events", icon: Calendar },
-    { label: "Chapters", href: "/community/chapters", icon: BookOpen },
-    { label: "Members", href: "/community/members", icon: Users },
-    { label: "Team", href: "/community/team", icon: UserCheck },
-    { label: "Directory", href: "/community/directory", icon: FolderOpen },
+    { label: 'Overview', href: '/community/overview', icon: TrendingUp },
+    { label: 'Events', href: '/community/events', icon: Calendar },
+    { label: 'Chapters', href: '/community/chapters', icon: BookOpen },
+    { label: 'Members', href: '/community/members', icon: Users },
+    { label: 'Team', href: '/community/team', icon: UserCheck },
+    { label: 'Directory', href: '/community/directory', icon: FolderOpen },
     {
-      label: "Message Board",
-      href: "/community/message-board",
+      label: 'Message Board',
+      href: '/community/message-board',
       icon: MessageSquare,
     },
-    { label: "Message", href: "/community/message", icon: Mail },
-    { label: "Services", href: "/community/services", icon: Settings },
-    { label: "History", href: "/community/history", icon: History },
-    { label: "Settings", href: "/community/settings", icon: Cog },
+    { label: 'Message', href: '/community/message', icon: Mail },
+    { label: 'Services', href: '/community/services', icon: Settings },
+    { label: 'History', href: '/community/history', icon: History },
+    { label: 'Settings', href: '/community/settings', icon: Cog },
   ],
   event: [
-    { label: "Overview", href: "/event/overview", icon: TrendingUp },
-    { label: "Events", href: "/event/events", icon: Calendar },
-    { label: "Vendors", href: "/event/vendors", icon: Truck },
-    { label: "Services", href: "/event/services", icon: Settings },
-    { label: "Team", href: "/event/team", icon: Users },
-    { label: "Settings", href: "/event/settings", icon: Cog },
+    { label: 'Overview', href: '/event/overview', icon: TrendingUp },
+    { label: 'Events', href: '/event/events', icon: Calendar },
+    { label: 'Vendors', href: '/event/vendors', icon: Truck },
+    { label: 'Services', href: '/event/services', icon: Settings },
+    { label: 'Team', href: '/event/team', icon: Users },
+    { label: 'Settings', href: '/event/settings', icon: Cog },
   ],
   agency: [
-    { label: "Overview", href: "/agency/overview", icon: TrendingUp },
-    { label: "Clients", href: "/agency/clients", icon: Users },
-    { label: "Services", href: "/agency/services", icon: Settings },
-    { label: "Team", href: "/agency/team", icon: UserCheck },
-    { label: "Settings", href: "/agency/settings", icon: Cog },
+    { label: 'Overview', href: '/agency/overview', icon: TrendingUp },
+    { label: 'Clients', href: '/agency/clients', icon: Users },
+    { label: 'Services', href: '/agency/services', icon: Settings },
+    { label: 'Team', href: '/agency/team', icon: UserCheck },
+    { label: 'Settings', href: '/agency/settings', icon: Cog },
   ],
 };
 
@@ -142,7 +146,7 @@ interface SideBarProps {
 
 export default function SideBar({
   onNavigate,
-  currentPath = "/",
+  currentPath = '/',
   expanded: controlledExpanded,
   onExpandedChange,
 }: SideBarProps) {
@@ -155,7 +159,7 @@ export default function SideBar({
     if (controlledExpanded === undefined) setUncontrolledExpanded(newExpanded);
     onExpandedChange?.(newExpanded);
   };
-  const [accountTypeId, setAccountTypeId] = useState<string>("personal");
+  const [accountTypeId, setAccountTypeId] = useState<string>('personal');
 
   const selectedAccount =
     ACCOUNT_TYPES.find((a) => a.id === accountTypeId) ?? ACCOUNT_TYPES[0];
@@ -165,7 +169,7 @@ export default function SideBar({
   const handleAccountTypeChange = (nextAccountTypeId: string) => {
     setAccountTypeId(nextAccountTypeId);
     const overviewPath =
-      NAV_ITEMS[nextAccountTypeId as keyof typeof NAV_ITEMS]?.[0]?.href ?? "/";
+      NAV_ITEMS[nextAccountTypeId as keyof typeof NAV_ITEMS]?.[0]?.href ?? '/';
     onNavigate?.(overviewPath);
     setMobileMenuOpen(false);
   };
@@ -180,14 +184,14 @@ export default function SideBar({
     };
 
     window.addEventListener(
-      "whodini:open-account-type",
-      handleOpenAccountType as EventListener,
+      'whodini:open-account-type',
+      handleOpenAccountType as EventListener
     );
 
     return () => {
       window.removeEventListener(
-        "whodini:open-account-type",
-        handleOpenAccountType as EventListener,
+        'whodini:open-account-type',
+        handleOpenAccountType as EventListener
       );
     };
   }, []);
@@ -249,8 +253,8 @@ export default function SideBar({
                           onClick={() => onNavigate?.(item.href)}
                           className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
                             isActive
-                              ? "bg-white/25 ring-1 ring-white/40"
-                              : "hover:bg-white/15"
+                              ? 'bg-white/25 ring-1 ring-white/40'
+                              : 'hover:bg-white/15'
                           }`}
                         >
                           <Icon className="w-5 h-5 shrink-0" aria-hidden />
@@ -305,11 +309,11 @@ export default function SideBar({
       {/* Desktop Sidebar */}
       <aside
         className={`hidden xl:flex fixed left-0 top-0 h-screen flex-col items-center py-8 shadow-xl bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] overflow-hidden transition-[width] duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] z-40 ${
-          expanded ? "w-64" : "w-[4.5rem]"
+          expanded ? 'w-64' : 'w-[4.5rem]'
         }`}
       >
         <div
-          className={`mb-4 flex flex-col items-center w-full flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
+          className={`mb-4 flex flex-col items-center w-full flex-shrink-0 ${expanded ? 'px-4' : 'px-2'}`}
         >
           <div className="w-full">
             <Select
@@ -318,7 +322,7 @@ export default function SideBar({
             >
               <SelectTrigger
                 className={`bg-white text-neutral-900 border-white/50 ${
-                  expanded ? "w-full" : "w-10 h-10 p-0 justify-center"
+                  expanded ? 'w-full' : 'w-10 h-10 p-0 justify-center'
                 }`}
                 aria-label={`Account type: ${selectedAccount.label}`}
                 title={!expanded ? selectedAccount.label : undefined}
@@ -326,7 +330,9 @@ export default function SideBar({
                 {expanded ? (
                   <SelectValue placeholder="Select account type" />
                 ) : (
-                  <span className="font-bold text-xs">{selectedAccount.initials}</span>
+                  <span className="font-bold text-xs">
+                    {selectedAccount.initials}
+                  </span>
                 )}
               </SelectTrigger>
               <SelectContent className="z-[60]">
@@ -347,7 +353,7 @@ export default function SideBar({
 
         <div className="flex-1 overflow-y-scroll overflow-x-hidden w-full min-h-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <nav
-            className={`flex flex-col gap-2 w-full pb-4 ${expanded ? "px-4" : "px-2 items-center"}`}
+            className={`flex flex-col gap-2 w-full pb-4 ${expanded ? 'px-4' : 'px-2 items-center'}`}
           >
             {currentNavItems.map((item) => {
               const Icon = item.icon;
@@ -359,12 +365,12 @@ export default function SideBar({
                   title={!expanded ? item.label : undefined}
                   className={`text-white font-medium rounded-xl transition flex items-center gap-3 ${
                     isActive
-                      ? "bg-white/20 ring-1 ring-white/30"
-                      : "hover:bg-white/10"
+                      ? 'bg-white/20 ring-1 ring-white/30'
+                      : 'hover:bg-white/10'
                   } ${
                     expanded
-                      ? "py-2 px-4 w-full text-left"
-                      : "w-10 h-10 justify-center p-0"
+                      ? 'py-2 px-4 w-full text-left'
+                      : 'w-10 h-10 justify-center p-0'
                   }`}
                 >
                   <Icon className="w-5 h-5 shrink-0" aria-hidden />
@@ -376,29 +382,31 @@ export default function SideBar({
         </div>
 
         <div
-          className={`w-full flex flex-col items-center gap-2 flex-shrink-0 ${expanded ? "px-4" : "px-2"}`}
+          className={`w-full flex flex-col items-center gap-2 flex-shrink-0 ${expanded ? 'px-4' : 'px-2'}`}
         >
           <button
             type="button"
             onClick={() => handleExpandedChange(!expanded)}
             className={`flex items-center justify-center text-white rounded-xl border border-white/30 hover:bg-white/20 transition ${
-              expanded ? "w-full py-2 gap-2" : "w-10 h-10"
+              expanded ? 'w-full py-2 gap-2' : 'w-10 h-10'
             }`}
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-            title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-label={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
+            title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
           >
             {expanded ? (
               <ChevronLeft className="w-5 h-5 shrink-0" />
             ) : (
               <ChevronRight className="w-5 h-5 shrink-0" />
             )}
-            {expanded && <span className="font-semibold text-sm">Collapse</span>}
+            {expanded && (
+              <span className="font-semibold text-sm">Collapse</span>
+            )}
           </button>
           <button
             type="button"
             title="Sign out"
             className={`flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition ${
-              expanded ? "w-full py-2 gap-2" : "w-10 h-10"
+              expanded ? 'w-full py-2 gap-2' : 'w-10 h-10'
             }`}
           >
             <LogOut className="w-5 h-5 shrink-0" aria-hidden />

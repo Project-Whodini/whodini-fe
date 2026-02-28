@@ -25,10 +25,9 @@ import {
 import EventsPage from '../personal/events/page';
 import ExploreEventsPage from '../personal/events/explore/page';
 import CommunityDashboardPage from '../personal/community/page';
-import BrandsPage from '../brands/page';
-import AgencyPage from '../agency/page';
-import OrganizerPage from '../organizer/page';
-import BusinessSetupPage from '../business/setup/page';
+import BrandsPage from '../business/brands/page';
+import BusinessTeamPage from '../business/team/page';
+import BusinessSetupPage from '../business/settings/setup/page';
 import BusinessOverviewPage from '../business/overview/page';
 import PersonalPage from '../personal/page';
 import GamesPage from '../personal/games/page';
@@ -40,9 +39,8 @@ import CommunityPage from '../personal/community/page';
 import CommunityShowPage from '../personal/community/show';
 import MembershipsPage from '../personal/membership/page';
 import SubscriptionsPage from '../personal/subscription/page';
-import ServicesPage from '../business/service/page';
+import ServicesPage from '../business/serviceProduct/page';
 import SubscriberPage from '../business/subscriber/page';
-import TeamPage from '../business/team/page';
 import BusinessNotificationPage from '../business/notifications/page';
 import BusinessHistoryPage from '../business/history/page';
 import BusinessSettingsPage from '../business/settings/page';
@@ -153,8 +151,8 @@ export default function DashboardPage() {
     '/business/events': () => <BusinessEventsPage />,
     '/business/brands': () => <BrandsPage />,
     '/business/services': () => <ServicesPage />,
+    '/business/team': () => <BusinessTeamPage />,
     '/business/subscribers': () => <SubscriberPage />,
-    '/business/team': () => <TeamPage />,
     '/business/notifications/create': () => <BusinessNotificationPage />,
     '/business/history': () => <BusinessHistoryPage />,
     '/business/settings': () => <BusinessSettingsPage />,

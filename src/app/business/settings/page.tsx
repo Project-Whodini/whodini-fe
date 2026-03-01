@@ -5,6 +5,7 @@ import { RequireSession } from '@/components/app/RequireSession';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { GeneralSettingsTab } from './business-settings/GeneralSettingsTab';
 import {
   Card,
   CardContent,
@@ -18,16 +19,6 @@ import {
   Shield,
   CreditCard,
   Key,
-  Upload,
-  MapPin,
-  Mail,
-  Globe,
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Music2,
-  Phone,
   Eye,
   EyeOff,
   Save,
@@ -37,7 +28,6 @@ import {
   Clock,
   Zap,
 } from 'lucide-react';
-import Image from 'next/image';
 
 interface PrivacySettings {
   twoFactorEnabled: boolean;
@@ -56,6 +46,13 @@ interface ApiSettings {
   webhookUrl: string;
   rateLimitEnabled: boolean;
   apiLogging: boolean;
+}
+
+interface LogoMeta {
+  fileName: string;
+  fileSizeMb: number;
+  width: number;
+  height: number;
 }
 
 export default function BusinessSettingsPage() {
@@ -78,11 +75,13 @@ export default function BusinessSettingsPage() {
     website: '',
     facebook: '',
     instagram: '',
+    youtube: '',
     twitter: '',
     tiktok: '',
     linkedin: '',
   });
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoMeta, setLogoMeta] = useState<LogoMeta | null>(null);
 
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
     twoFactorEnabled: false,
@@ -130,8 +129,32 @@ export default function BusinessSettingsPage() {
   const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
+      setLogoPreview(null);
+      setLogoMeta(null);
       return;
     }
+
+    const imageUrl = URL.createObjectURL(file);
+    const image = new window.Image();
+    image.onload = () => {
+      setLogoMeta({
+        fileName: file.name,
+        fileSizeMb: Number((file.size / (1024 * 1024)).toFixed(2)),
+        width: image.width,
+        height: image.height,
+      });
+      URL.revokeObjectURL(imageUrl);
+    };
+    image.onerror = () => {
+      setLogoMeta({
+        fileName: file.name,
+        fileSizeMb: Number((file.size / (1024 * 1024)).toFixed(2)),
+        width: 0,
+        height: 0,
+      });
+      URL.revokeObjectURL(imageUrl);
+    };
+    image.src = imageUrl;
 
     const reader = new FileReader();
     reader.onload = (loadEvent) => {
@@ -215,388 +238,14 @@ export default function BusinessSettingsPage() {
 
           {/* General Settings */}
           {activeTab === 'general' && (
-            <form onSubmit={handleSetupSubmit} className="space-y-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5" />
-                    Business Logo
-                  </CardTitle>
-                  <CardDescription>
-                    Upload your business logo (recommended: 200x200px)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-                    <div className="relative">
-                      {logoPreview ? (
-                        <Image
-                          src={logoPreview}
-                          alt="Business Logo"
-                          width={100}
-                          height={100}
-                          className="rounded-xl border border-neutral-200 object-cover"
-                        />
-                      ) : (
-                        <div className="w-24 h-24 bg-neutral-100 rounded-xl border border-dashed border-neutral-300 flex items-center justify-center">
-                          <Building2 className="w-8 h-8 text-neutral-400" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="w-full sm:w-auto">
-                      <Label
-                        htmlFor="logo-upload"
-                        className="inline-block w-full sm:w-auto"
-                      >
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full cursor-pointer sm:w-auto"
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Upload Logo
-                        </Button>
-                      </Label>
-                      <Input
-                        id="logo-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleLogoUpload}
-                        className="hidden"
-                      />
-                      <p className="text-xs text-neutral-500 mt-1">
-                        PNG, JPG up to 5MB
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Basic Information</CardTitle>
-                  <CardDescription>Tell us about your business</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="md:col-span-2">
-                      <Label htmlFor="setup-businessName">
-                        Business Name *
-                      </Label>
-                      <Input
-                        id="setup-businessName"
-                        placeholder="Enter your business name"
-                        value={setupFormData.businessName}
-                        onChange={(event) =>
-                          handleSetupInputChange(
-                            'businessName',
-                            event.target.value
-                          )
-                        }
-                        className="mt-1"
-                        required
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="setup-description">
-                        Business Description
-                      </Label>
-                      <textarea
-                        id="setup-description"
-                        placeholder="Briefly describe your business..."
-                        value={setupFormData.description}
-                        onChange={(event) =>
-                          handleSetupInputChange(
-                            'description',
-                            event.target.value
-                          )
-                        }
-                        className="mt-1 w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                        rows={3}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="setup-category">Business Category</Label>
-                      <Input
-                        id="setup-category"
-                        placeholder="e.g., Technology, Retail, etc."
-                        value={setupFormData.category}
-                        onChange={(event) =>
-                          handleSetupInputChange('category', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5" />
-                    Contact Information
-                  </CardTitle>
-                  <CardDescription>
-                    Where can customers reach you?
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="md:col-span-2">
-                      <Label htmlFor="setup-address">Street Address</Label>
-                      <Input
-                        id="setup-address"
-                        placeholder="Enter your business address"
-                        value={setupFormData.address}
-                        onChange={(event) =>
-                          handleSetupInputChange('address', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="setup-city">City</Label>
-                      <Input
-                        id="setup-city"
-                        placeholder="City"
-                        value={setupFormData.city}
-                        onChange={(event) =>
-                          handleSetupInputChange('city', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="setup-state">State/Province</Label>
-                      <Input
-                        id="setup-state"
-                        placeholder="State"
-                        value={setupFormData.state}
-                        onChange={(event) =>
-                          handleSetupInputChange('state', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="setup-zipCode">ZIP/Postal Code</Label>
-                      <Input
-                        id="setup-zipCode"
-                        placeholder="ZIP Code"
-                        value={setupFormData.zipCode}
-                        onChange={(event) =>
-                          handleSetupInputChange('zipCode', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="setup-country">Country</Label>
-                      <Input
-                        id="setup-country"
-                        placeholder="Country"
-                        value={setupFormData.country}
-                        onChange={(event) =>
-                          handleSetupInputChange('country', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="setup-phone"
-                        className="flex items-center gap-2"
-                      >
-                        <Phone className="w-4 h-4" />
-                        Phone Number
-                      </Label>
-                      <Input
-                        id="setup-phone"
-                        placeholder="+1 (555) 123-4567"
-                        value={setupFormData.phone}
-                        onChange={(event) =>
-                          handleSetupInputChange('phone', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="setup-email"
-                        className="flex items-center gap-2"
-                      >
-                        <Mail className="w-4 h-4" />
-                        Business Email
-                      </Label>
-                      <Input
-                        id="setup-email"
-                        type="email"
-                        placeholder="business@example.com"
-                        value={setupFormData.email}
-                        onChange={(event) =>
-                          handleSetupInputChange('email', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Globe className="w-5 h-5" />
-                    Online Presence
-                  </CardTitle>
-                  <CardDescription>
-                    Connect your social media and website
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <Label
-                        htmlFor="setup-website"
-                        className="flex items-center gap-2"
-                      >
-                        <Globe className="w-4 h-4" />
-                        Website
-                      </Label>
-                      <Input
-                        id="setup-website"
-                        placeholder="https://www.yourbusiness.com"
-                        value={setupFormData.website}
-                        onChange={(event) =>
-                          handleSetupInputChange('website', event.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <Separator />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label
-                          htmlFor="setup-facebook"
-                          className="flex items-center gap-2"
-                        >
-                          <Facebook className="w-4 h-4 text-blue-600" />
-                          Facebook
-                        </Label>
-                        <Input
-                          id="setup-facebook"
-                          placeholder="https://facebook.com/yourbusiness"
-                          value={setupFormData.facebook}
-                          onChange={(event) =>
-                            handleSetupInputChange(
-                              'facebook',
-                              event.target.value
-                            )
-                          }
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor="setup-instagram"
-                          className="flex items-center gap-2"
-                        >
-                          <Instagram className="w-4 h-4 text-pink-600" />
-                          Instagram
-                        </Label>
-                        <Input
-                          id="setup-instagram"
-                          placeholder="https://instagram.com/yourbusiness"
-                          value={setupFormData.instagram}
-                          onChange={(event) =>
-                            handleSetupInputChange(
-                              'instagram',
-                              event.target.value
-                            )
-                          }
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor="setup-twitter"
-                          className="flex items-center gap-2"
-                        >
-                          <Twitter className="w-4 h-4 text-blue-400" />
-                          Twitter
-                        </Label>
-                        <Input
-                          id="setup-twitter"
-                          placeholder="https://twitter.com/yourbusiness"
-                          value={setupFormData.twitter}
-                          onChange={(event) =>
-                            handleSetupInputChange(
-                              'twitter',
-                              event.target.value
-                            )
-                          }
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor="setup-linkedin"
-                          className="flex items-center gap-2"
-                        >
-                          <Linkedin className="w-4 h-4 text-blue-700" />
-                          LinkedIn
-                        </Label>
-                        <Input
-                          id="setup-linkedin"
-                          placeholder="https://linkedin.com/company/yourbusiness"
-                          value={setupFormData.linkedin}
-                          onChange={(event) =>
-                            handleSetupInputChange(
-                              'linkedin',
-                              event.target.value
-                            )
-                          }
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor="setup-tiktok"
-                          className="flex items-center gap-2"
-                        >
-                          <Music2 className="w-4 h-4 text-neutral-900" />
-                          TikTok
-                        </Label>
-                        <Input
-                          id="setup-tiktok"
-                          placeholder="https://www.tiktok.com/@yourbusiness"
-                          value={setupFormData.tiktok}
-                          onChange={(event) =>
-                            handleSetupInputChange('tiktok', event.target.value)
-                          }
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full sm:w-auto"
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" className="w-full sm:w-auto">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Business Profile
-                </Button>
-              </div>
-            </form>
+            <GeneralSettingsTab
+              setupFormData={setupFormData}
+              logoPreview={logoPreview}
+              logoMeta={logoMeta}
+              onSetupInputChange={handleSetupInputChange}
+              onLogoUpload={handleLogoUpload}
+              onSubmit={handleSetupSubmit}
+            />
           )}
 
           {/* Privacy & Security Settings */}

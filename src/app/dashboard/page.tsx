@@ -1,79 +1,70 @@
 'use client';
 
+// React
 import { JSX, useEffect, useState } from 'react';
-import { RequireSession } from '@/components/app/RequireSession';
-import SideBar from '@/components/app/SideBar';
+
+// Icons
+import { type LucideIcon } from 'lucide-react';
+
+// UI components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-import {
-  Users,
-  Settings,
-  UserCheck,
-  Plus,
-  History,
-  Cog,
-  BookOpen,
-  FolderOpen,
-  MessageSquare,
-  Mail,
-  Truck,
-  type LucideIcon,
-} from 'lucide-react';
+// App components
+import { RequireSession } from '@/components/app/RequireSession';
+import SideBar from '@/components/app/SideBar';
 
-// Import actual page components
-import EventsPage from '../personal/events/page';
-import ExploreEventsPage from '../personal/events/explore/page';
-import CommunityDashboardPage from '../personal/community/page';
-import BrandsPage from '../business/brands/page';
-import BusinessTeamPage from '../business/team/page';
-import BusinessSetupPage from '../business/settings/setup/page';
-import BusinessOverviewPage from '../business/overview/page';
+// Personal pages
 import PersonalPage from '../personal/page';
-import GamesPage from '../personal/games/page';
-import RewardsPage from '../personal/rewards/page';
 import ActivityPage from '../personal/activity/page';
-import NotificationsPage from '../personal/notification/page';
-import NotificationShowPage from '../personal/notification/show';
 import CommunityPage from '../personal/community/page';
 import CommunityShowPage from '../personal/community/show';
+import EventsPage from '../personal/events/page';
+import ExploreEventsPage from '../personal/events/explore/page';
+import GamesPage from '../personal/games/page';
 import MembershipsPage from '../personal/membership/page';
+import NotificationsPage from '../personal/notification/page';
+import NotificationShowPage from '../personal/notification/show';
+import RewardsPage from '../personal/rewards/page';
 import SubscriptionsPage from '../personal/subscription/page';
+
+// Business pages
+import BusinessOverviewPage from '../business/overview/page';
+import BrandsPage from '../business/brands/page';
+import BusinessEventsPage from '../business/events/page';
+import BusinessHistoryPage from '../business/history/page';
+import BusinessNotificationPage from '../business/notifications/page';
+import BusinessSettingsPage from '../business/settings/page';
 import ServicesPage from '../business/serviceProduct/page';
 import SubscriberPage from '../business/subscriber/page';
-import BusinessNotificationPage from '../business/notifications/page';
-import BusinessHistoryPage from '../business/history/page';
-import BusinessSettingsPage from '../business/settings/page';
-import BusinessEventsPage from '../business/events/page';
+import BusinessTeamPage from '../business/team/page';
+
+// Community pages
+import CommunityDashboardPage from '../community/page';
+import CommunityChaptersPage from '../community/chapters/page';
+import CommunityDirectoryPage from '../community/directory/page';
+import CommunityEventsPage from '../community/events/page';
+import CommunityHistoryPage from '../community/history/page';
+import CommunityMembersPage from '../community/members/page';
+import CommunityMessageBoardPage from '../community/message-board/page';
+import CommunityServicesPage from '../community/services/page';
+import CommunitySettingsPage from '../community/settings/page';
+import CommunityTeamPage from '../community/team/page';
+
+// Organizer pages
+import OrganizerDashboardPage from '../organizer/page';
 import OrganizerEventsPage from '../organizer/events/page';
-import OrganizerVendorsPage from '../organizer/vendors/page';
 import OrganizerServicesPage from '../organizer/services/page';
-import OrganizerTeamPage from '../organizer/team/page';
 import OrganizerSettingsPage from '../organizer/settings/page';
+import OrganizerTeamPage from '../organizer/team/page';
+import OrganizerVendorsPage from '../organizer/vendors/page';
+
+// Agency pages
 import AgencyDashboardPage from '../agency/page';
 import AgencyClientsPage from '../agency/clients/page';
 import AgencyServicesPage from '../agency/services/page';
-import AgencyTeamPage from '../agency/team/page';
 import AgencySettingsPage from '../agency/settings/page';
-import CommunityMembersPage from '../community/members/page';
-import CommunityChaptersPage from '../community/chapters/page';
-import CommunityDirectoryPage from '../community/directory/page';
-import CommunityMessagePage from '../community/message/page';
-import CommunityMessageBoardPage from '../community/message-board/page';
-import OrganizerDashboardPage from '../organizer/page';
-import CommunityTeamPage from '../community/team/page';
-import CommunityEventsPage from '../community/events/page';
-import CommunityServicesPage from '../community/services/page';
-import CommunityHistoryPage from '../community/history/page';
-import CommunitySettingsPage from '../community/settings/page';
-
-function BusinessSetupContent() {
-  return (
-    <div className="h-full w-full">
-      <BusinessSetupPage />
-    </div>
-  );
-}
+import AgencyTeamPage from '../agency/team/page';
 
 // Generic Content Components for other sections
 function GenericContent({
@@ -147,7 +138,7 @@ export default function DashboardPage() {
 
     // Business Account
     '/business/overview': () => <BusinessOverviewPage />,
-    '/business/setup': () => <BusinessSetupContent />,
+    '/business/setup': () => <BusinessSettingsPage />,
     '/business/events': () => <BusinessEventsPage />,
     '/business/brands': () => <BrandsPage />,
     '/business/services': () => <ServicesPage />,
@@ -165,7 +156,6 @@ export default function DashboardPage() {
     '/community/team': () => <CommunityTeamPage />,
     '/community/directory': () => <CommunityDirectoryPage />,
     '/community/message-board': () => <CommunityMessageBoardPage />,
-    '/community/message': () => <CommunityMessagePage />,
     '/community/services': () => <CommunityServicesPage />,
     '/community/history': () => <CommunityHistoryPage />,
     '/community/settings': () => <CommunitySettingsPage />,

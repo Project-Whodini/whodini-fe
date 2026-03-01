@@ -115,7 +115,7 @@ const NAV_ITEMS = {
       href: '/community/message-board',
       icon: MessageSquare,
     },
-    { label: 'Message', href: '/community/message', icon: Mail },
+    // { label: 'Message', href: '/community/message', icon: Mail },
     { label: 'Services', href: '/community/services', icon: Settings },
     { label: 'History', href: '/community/history', icon: History },
     { label: 'Settings', href: '/community/settings', icon: Cog },

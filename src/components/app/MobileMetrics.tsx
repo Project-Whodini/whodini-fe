@@ -7,6 +7,7 @@ export interface MobileMetricItem {
   label: string;
   value: ReactNode;
   valueClassName?: string;
+  icon?: ReactNode;
 }
 
 interface MobileMetricsProps {
@@ -26,7 +27,12 @@ export function MobileMetrics({ items, className }: MobileMetricsProps) {
               key={item.label}
               className="flex items-center justify-between px-4 py-3"
             >
-              <span className="text-sm text-neutral-600">{item.label}</span>
+              <span className="text-sm text-neutral-600 flex items-center gap-1.5">
+                {item.icon && (
+                  <span className="text-[#ff5f6d]">{item.icon}</span>
+                )}
+                {item.label}
+              </span>
               <span
                 className={`inline-flex items-center gap-1 text-lg font-bold ${
                   item.valueClassName ?? 'text-neutral-900'

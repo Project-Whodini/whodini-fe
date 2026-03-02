@@ -36,6 +36,9 @@ export type StaffInfo = {
   role: 'admin' | 'moderator' | 'coordinator';
 };
 
+// Community owner: their identity is always shown with a Founder badge, no alias editing
+export const COMMUNITY_OWNER = 'Alex Rivera';
+
 // Community staff: team members whose identity is always shown with their real name + position
 export const COMMUNITY_STAFF: Record<string, StaffInfo> = {
   'Sarah Williams': { position: 'Community Director', role: 'admin' },
@@ -219,7 +222,7 @@ export default function MessageBoardPage() {
   const [posts, setPosts] = useState<ForumPost[]>(INITIAL_POSTS);
   const [view, setView] = useState<ViewState>('list');
   const [selected, setSelected] = useState<MessageThread | null>(null);
-  const [alias, setAlias] = useState('');
+  const [alias, setAlias] = useState(COMMUNITY_OWNER);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
@@ -295,6 +298,7 @@ export default function MessageBoardPage() {
         thread={selected}
         posts={posts}
         alias={alias}
+        communityOwner={COMMUNITY_OWNER}
         communityStaff={COMMUNITY_STAFF}
         onAliasChange={setAlias}
         onPostReply={handlePostReply}

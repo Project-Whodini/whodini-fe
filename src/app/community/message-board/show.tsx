@@ -22,6 +22,7 @@ type Props = {
   thread: MessageThread;
   posts: ForumPost[];
   alias: string;
+  communityOwner: string;
   communityStaff: Record<string, StaffInfo>;
   onAliasChange: (alias: string) => void;
   onPostReply: (threadId: string, content: string, author: string) => void;
@@ -84,6 +85,7 @@ export default function ShowThread({
   thread,
   posts,
   alias,
+  communityOwner,
   communityStaff,
   onAliasChange,
   onPostReply,
@@ -95,7 +97,8 @@ export default function ShowThread({
 
   // If the current alias matches a staff member, they post as their real identity
   const myStaffInfo: StaffInfo | null = communityStaff[alias] ?? null;
-  const canPost = !!alias; // staff always have alias = their name; regular need to set one
+  const isOwner = alias === communityOwner;
+  const canPost = !!alias; // staff/owner always have alias = their name; regular need to set one
 
   const saveAlias = () => {
     const trimmed = draftAlias.trim();
@@ -190,7 +193,18 @@ export default function ShowThread({
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-5 px-1">
           <span className="text-xs text-neutral-500 shrink-0">Posting as:</span>
 
-          {myStaffInfo ? (
+          {isOwner ? (
+            /* ── Community owner: Founder badge, no alias editing ── */
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-neutral-900">
+                {alias}
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#ff5f6d] text-white">
+                Founder
+              </span>
+              <span className="text-xs text-neutral-400 italic">· official</span>
+            </div>
+          ) : myStaffInfo ? (
             /* ── Staff identity: real name + position badge, no alias editing ── */
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-neutral-900">
@@ -255,7 +269,7 @@ export default function ShowThread({
             </div>
           )}
 
-          {!alias && !editingAlias && !myStaffInfo && (
+          {!alias && !editingAlias && !myStaffInfo && !isOwner && (
             <span className="text-xs text-amber-600">
               Set an alias to join the discussion
             </span>
@@ -293,13 +307,17 @@ export default function ShowThread({
                       <span className="font-medium text-neutral-700">
                         {post.author}
                       </span>
-                      {communityStaff[post.author] && (
+                      {post.author === communityOwner ? (
+                        <span className="px-1.5 py-0.5 rounded-full text-xs font-medium bg-[#ff5f6d] text-white">
+                          Founder
+                        </span>
+                      ) : communityStaff[post.author] ? (
                         <span
                           className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${roleColor(communityStaff[post.author].role)}`}
                         >
                           {communityStaff[post.author].position}
                         </span>
-                      )}
+                      ) : null}
                       <span>{post.timestamp}</span>
                     </div>
                     <div
@@ -340,7 +358,9 @@ export default function ShowThread({
                   className="flex-1 border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5f6d]/30 resize-none"
                   rows={2}
                   placeholder={
-                    myStaffInfo
+                    isOwner
+                      ? `Reply as ${alias} · Founder…`
+                      : myStaffInfo
                       ? `Reply as ${alias} · ${myStaffInfo.position}…`
                       : `Reply as ${alias}… (Enter to send, Shift+Enter for new line)`
                   }

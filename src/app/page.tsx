@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import appleLogo from "@/assets/apple.svg";
-import facebookLogo from "@/assets/facebook.svg";
-import googleLogo from "@/assets/google.svg";
-import { signInWithEmailPassword } from "@/lib/indexeddb/auth";
-import { writeSession } from "@/lib/dummy/storage";
-import type { Session } from "@/lib/dummy/types";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Image from 'next/image';
+import appleLogo from '@/assets/apple.svg';
+import facebookLogo from '@/assets/facebook.svg';
+import googleLogo from '@/assets/google.svg';
+import { signInWithEmailPassword } from '@/lib/indexeddb/auth';
+import { writeSession } from '@/lib/dummy/storage';
+import type { Session } from '@/lib/dummy/types';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,22 +30,22 @@ export default function LoginPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
 
       const session: Session = {
-        userId: "demo-user-id",
-        email: email || "demo@example.com",
-        displayName: "Demo User",
+        userId: 'demo-user-id',
+        email: email || 'demo@example.com',
+        displayName: 'Demo User',
         roles: [
           {
-            accountType: "personal",
-            accountId: "demo-user-id",
-            label: "Personal",
+            accountType: 'personal',
+            accountId: 'demo-user-id',
+            label: 'Personal',
           },
         ],
         activeRoleIndex: 0,
       };
       writeSession(session);
-      router.push("/dashboard");
+      router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to sign in");
+      setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {
       setIsSigningIn(false);
     }
@@ -58,7 +58,9 @@ export default function LoginPage() {
         <div className="mb-6 sm:mb-8 flex flex-col items-center">
           <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg ring-1 ring-white/20 mb-2">
             <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/40 to-white/10">
-              <span className="text-base sm:text-lg font-semibold text-[#ff5f6d]">W</span>
+              <span className="text-base sm:text-lg font-semibold text-[#ff5f6d]">
+                W
+              </span>
             </div>
           </div>
           <span className="text-2xl sm:text-3xl font-bold tracking-tight text-white drop-shadow-sm">
@@ -125,7 +127,7 @@ export default function LoginPage() {
               disabled={isSigningIn}
               className="w-full mt-6 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] text-white font-semibold text-sm sm:text-base py-2 rounded-xl shadow-md border-0 hover:opacity-90 transition"
             >
-              {isSigningIn ? "Signing in..." : "Sign In"}
+              {isSigningIn ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 
@@ -145,45 +147,24 @@ export default function LoginPage() {
             <div className="mt-4 flex justify-center gap-2 sm:gap-3">
               <button
                 type="button"
-                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
+                className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
               >
                 <Image
                   src={googleLogo}
                   alt="Google"
-                  width={24}
-                  height={24}
-                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
                 />
+                <span className="text-sm font-medium text-neutral-700">
+                  Sign in via Google
+                </span>
               </button>
-              {/* <button
-                type="button"
-                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
-              >
-                <Image
-                  src={facebookLogo}
-                  alt="Facebook"
-                  width={24}
-                  height={24}
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                />
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 transition"
-              >
-                <Image
-                  src={appleLogo}
-                  alt="Apple"
-                  width={24}
-                  height={24}
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                />
-              </button> */}
             </div>
           </div>
 
           <div className="mt-6 text-sm text-neutral-700 text-center">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{' '}
             <Link
               href="/register"
               className="text-[#ff5f6d] font-medium hover:underline"
@@ -192,6 +173,15 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+
+        <a
+          href="https://project-whodini.github.io/whodini-landing/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl bg-white/20 px-6 py-3 text-sm font-semibold text-white shadow-md backdrop-blur-sm hover:bg-white/30 transition"
+        >
+          Learn more about Whodini →
+        </a>
       </div>
     </div>
   );

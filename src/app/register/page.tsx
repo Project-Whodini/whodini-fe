@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
-import appleLogo from "@/assets/apple.svg";
-import facebookLogo from "@/assets/facebook.svg";
-import googleLogo from "@/assets/google.svg";
-import { createUser, type AccountType } from "@/lib/indexeddb/auth";
+import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
+import appleLogo from '@/assets/apple.svg';
+import facebookLogo from '@/assets/facebook.svg';
+import googleLogo from '@/assets/google.svg';
+import { createUser, type AccountType } from '@/lib/indexeddb/auth';
 export default function RegisterPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +32,7 @@ export default function RegisterPage() {
 
   const handleAccountTypeChange = (type: keyof typeof accountTypes) => {
     // Prevent unchecking personal account type
-    if (type === "personal") return;
+    if (type === 'personal') return;
 
     setAccountTypes((prev) => ({
       ...prev,
@@ -46,7 +46,7 @@ export default function RegisterPage() {
     setSuccess(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
 
@@ -62,10 +62,10 @@ export default function RegisterPage() {
         password,
         accountTypes: selectedAccountTypes,
       });
-      setSuccess("Account saved locally");
-      router.push("/");
+      setSuccess('Account saved locally');
+      router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create account");
+      setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
       setIsSaving(false);
     }
@@ -122,7 +122,7 @@ export default function RegisterPage() {
                       </label>
                       <div className="relative">
                         <Input
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -149,7 +149,7 @@ export default function RegisterPage() {
                       </label>
                       <div className="relative">
                         <Input
-                          type={showConfirmPassword ? "text" : "password"}
+                          type={showConfirmPassword ? 'text' : 'password'}
                           placeholder="••••••••"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -178,11 +178,11 @@ export default function RegisterPage() {
                   </label>
                   <div className="grid grid-cols-1 gap-3 sm:gap-4">
                     {[
-                      { key: "personal", label: "Personal" },
-                      { key: "business", label: "Business" },
-                      { key: "community", label: "Community" },
-                      { key: "organizer", label: "Event" },
-                      { key: "agency", label: "Agency" },
+                      { key: 'personal', label: 'Personal' },
+                      { key: 'business', label: 'Business' },
+                      { key: 'community', label: 'Community' },
+                      { key: 'organizer', label: 'Event' },
+                      { key: 'agency', label: 'Agency' },
                     ].map(({ key, label }) => (
                       <div
                         key={key}
@@ -196,11 +196,11 @@ export default function RegisterPage() {
                           }
                           onChange={() =>
                             handleAccountTypeChange(
-                              key as keyof typeof accountTypes,
+                              key as keyof typeof accountTypes
                             )
                           }
-                          disabled={key === "personal"}
-                          className={`w-4 h-4 text-[#ff5f6d] border-neutral-300 rounded focus:ring-[#ff5f6d] focus:ring-2 ${key === "personal" ? "cursor-not-allowed" : ""}`}
+                          disabled={key === 'personal'}
+                          className={`w-4 h-4 text-[#ff5f6d] border-neutral-300 rounded focus:ring-[#ff5f6d] focus:ring-2 ${key === 'personal' ? 'cursor-not-allowed' : ''}`}
                         />
                         <label
                           htmlFor={key}
@@ -232,7 +232,7 @@ export default function RegisterPage() {
                 type="submit"
                 className="w-full mt-3 bg-gradient-to-r from-[#ff5f6d] to-[#ffc371] hover:opacity-90 text-white font-bold h-11 rounded-xl shadow-lg border-none transition-transform active:scale-95"
               >
-                {isSaving ? "Saving..." : "Create Account"}
+                {isSaving ? 'Saving...' : 'Create Account'}
               </Button>
             </form>
 
@@ -240,35 +240,29 @@ export default function RegisterPage() {
             <div className="flex justify-center gap-2 sm:gap-3 mt-4">
               <Button
                 variant="outline"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
+                className="flex items-center gap-2 px-4 h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all"
               >
                 <Image src={googleLogo} alt="Google" width={20} height={20} />
-              </Button>
-              <Button
-                variant="outline"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
-              >
-                <Image src={appleLogo} alt="Apple" width={20} height={20} />
-              </Button>
-              <Button
-                variant="outline"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-neutral-200 hover:bg-neutral-50 transition-all p-0"
-              >
-                <Image
-                  src={facebookLogo}
-                  alt="Facebook"
-                  width={20}
-                  height={20}
-                />
+                <span className="text-sm font-medium text-neutral-700">
+                  Sign up via Google
+                </span>
               </Button>
             </div>
           </div>
           <div className="mt-4 text-center text-sm text-neutral-600">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link href="/" className="text-[#ff5f6d] font-bold hover:underline">
               Sign in
             </Link>
           </div>
+          <a
+            href="https://project-whodini.github.io/whodini-landing/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl bg-white/20 px-6 py-3 text-sm font-semibold text-black shadow-md backdrop-blur-sm hover:bg-white/30 transition"
+          >
+            Learn more about Whodini
+          </a>
         </div>
       </div>
     </>

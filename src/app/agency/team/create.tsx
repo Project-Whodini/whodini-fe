@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Save, X } from "lucide-react";
@@ -91,7 +91,7 @@ export function CreateTeamMemberForm({ agencyName, onCreateMember, onCancel }: C
 			</CardHeader>
 			<CardContent className="pt-6">
 				<form onSubmit={handleSubmit} className="space-y-4">
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
 							<Label htmlFor="name" className="text-sm font-medium text-neutral-700">
 								Full Name *
@@ -123,7 +123,7 @@ export function CreateTeamMemberForm({ agencyName, onCreateMember, onCancel }: C
 						</div>
 					</div>
 
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
 							<Label htmlFor="position" className="text-sm font-medium text-neutral-700">
 								Position *
@@ -170,7 +170,7 @@ export function CreateTeamMemberForm({ agencyName, onCreateMember, onCancel }: C
 						</div>
 					</div>
 
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
 							<Label htmlFor="hourlyRate" className="text-sm font-medium text-neutral-700">
 								Hourly Rate ($) *

@@ -33,6 +33,7 @@ import {
   SheetContent,
   SheetTrigger,
   SheetClose,
+  SheetTitle,
 } from '@/components/ui/sheet';
 import {
   Select,
@@ -216,6 +217,7 @@ export default function SideBar({
               side="left"
               className="p-0 w-[88vw] max-w-sm border-r-0 bg-gradient-to-br from-[#ff5f6d] to-[#ffc371] text-white"
             >
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="h-full flex flex-col min-h-0">
                 <div className="p-4 border-b border-white/20">
                   <div className="text-sm font-semibold mb-2">Account Type</div>

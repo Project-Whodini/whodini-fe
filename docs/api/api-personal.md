@@ -494,6 +494,135 @@ Base path: `/api/personal`
 
 ---
 
+### Community Forum
+
+Routes for reading and posting messages in a community's chat-room style forum thread.
+
+---
+
+#### List Forum Messages
+
+**Method:** `GET`  
+**Path:** `/api/personal/community/:id/forum`  
+**Purpose:** Fetch paginated messages for a community's forum. Context seed messages are included when the page is first loaded.
+
+**Query Parameters:**
+
+| Param   | Type   | Description                  |
+| ------- | ------ | ---------------------------- |
+| `page`  | number | Pagination page (default: 1) |
+| `limit` | number | Items per page (default: 30) |
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "author": "Sarah Chen",
+      "text": "Excited to share our latest AI breakthrough with the team!",
+      "timestamp": "2 hours ago",
+      "likes": 24,
+      "is_own": false
+    }
+  ],
+  "meta": { "page": 1, "total": 12 }
+}
+```
+
+---
+
+#### Post Forum Message
+
+**Method:** `POST`  
+**Path:** `/api/personal/community/:id/forum`  
+**Purpose:** Post a new message into a community's forum thread.
+
+**Request Body:**
+
+```json
+{
+  "text": "Great discussion everyone!"
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 7,
+    "author": "Weng Santos",
+    "text": "Great discussion everyone!",
+    "timestamp": "just now",
+    "likes": 0,
+    "is_own": true
+  }
+}
+```
+
+---
+
+#### Leave Forum
+
+**Method:** `DELETE`  
+**Path:** `/api/personal/community/:id/forum/leave`  
+**Purpose:** Remove the authenticated user from the community forum. Soft deletes their forum membership record.
+
+**Response:**
+
+```json
+{
+  "data": {
+    "community_id": "uuid",
+    "left_at": "2025-01-01T00:00:00Z"
+  }
+}
+```
+
+---
+
+#### Like Forum Message
+
+**Method:** `POST`  
+**Path:** `/api/personal/community/:id/forum/:messageId/like`  
+**Purpose:** Record a like from the authenticated user on a forum message.
+
+**Response:**
+
+```json
+{
+  "data": {
+    "message_id": 1,
+    "likes": 25,
+    "liked_at": "2025-01-01T00:00:00Z"
+  }
+}
+```
+
+---
+
+#### Unlike Forum Message
+
+**Method:** `DELETE`  
+**Path:** `/api/personal/community/:id/forum/:messageId/like`  
+**Purpose:** Soft delete the like record (unlike a forum message).
+
+**Response:**
+
+```json
+{
+  "data": {
+    "message_id": 1,
+    "likes": 24,
+    "deleted_at": "2025-01-01T00:00:00Z"
+  }
+}
+```
+
+---
+
 ## 5. Events
 
 ### List My Events
@@ -1425,56 +1554,61 @@ Base path: `/api/personal`
 
 ## Route Summary
 
-| Method   | Path                                            | Purpose                                         |
-| -------- | ----------------------------------------------- | ----------------------------------------------- |
-| `GET`    | `/api/personal/profile`                         | Get user profile                                |
-| `PATCH`  | `/api/personal/profile`                         | Update basic info (display_name, username, bio) |
-| `PATCH`  | `/api/personal/profile/contact`                 | Update contact info                             |
-| `PATCH`  | `/api/personal/profile/social`                  | Update social links                             |
-| `GET`    | `/api/personal/profile/interests`               | List interests                                  |
-| `POST`   | `/api/personal/profile/interests`               | Add an interest                                 |
-| `DELETE` | `/api/personal/profile/interests/:id`           | Soft delete an interest                         |
-| `GET`    | `/api/personal/dashboard`                       | Get snapshot counts and peeks                   |
-| `GET`    | `/api/personal/activity`                        | List activity feed + stats                      |
-| `DELETE` | `/api/personal/activity/:id`                    | Soft delete an activity                         |
-| `GET`    | `/api/personal/community/feed`                  | Get community message feed                      |
-| `GET`    | `/api/personal/community/discover`              | Discover communities                            |
-| `GET`    | `/api/personal/community/:id`                   | Get community detail                            |
-| `POST`   | `/api/personal/community/:id/follow`            | Follow a community                              |
-| `DELETE` | `/api/personal/community/:id/follow`            | Unfollow a community                            |
-| `POST`   | `/api/personal/community/:id/membership`        | Join a community                                |
-| `DELETE` | `/api/personal/community/:id/membership`        | Leave a community                               |
-| `GET`    | `/api/personal/events`                          | List my events                                  |
-| `GET`    | `/api/personal/events/explore`                  | Explore all events                              |
-| `GET`    | `/api/personal/events/:id`                      | Get event detail                                |
-| `POST`   | `/api/personal/events/:id/follow`               | Follow an event                                 |
-| `DELETE` | `/api/personal/events/:id/follow`               | Unfollow an event                               |
-| `PATCH`  | `/api/personal/events/:id/interested`           | Toggle interested                               |
-| `PATCH`  | `/api/personal/events/:id/notify`               | Toggle event date notification                  |
-| `GET`    | `/api/personal/notifications`                   | List notifications                              |
-| `GET`    | `/api/personal/notifications/:id`               | Get notification detail                         |
-| `PATCH`  | `/api/personal/notifications/:id/read`          | Mark notification as read                       |
-| `DELETE` | `/api/personal/notifications/:id`               | Soft delete notification                        |
-| `GET`    | `/api/personal/membership/communities`          | Discover communities (membership)               |
-| `GET`    | `/api/personal/membership/communities/mine`     | My joined communities                           |
-| `GET`    | `/api/personal/membership/communities/:id`      | Community detail (membership)                   |
-| `POST`   | `/api/personal/membership/communities/:id/join` | Join a community                                |
-| `DELETE` | `/api/personal/membership/communities/:id/join` | Leave a community                               |
-| `GET`    | `/api/personal/membership/events`               | Browse upcoming events                          |
-| `GET`    | `/api/personal/membership/events/mine`          | My registered/attended events                   |
-| `GET`    | `/api/personal/membership/events/:id`           | Event detail (membership)                       |
-| `POST`   | `/api/personal/membership/events/:id/register`  | Register for an event                           |
-| `DELETE` | `/api/personal/membership/events/:id/register`  | Unregister from an event                        |
-| `GET`    | `/api/personal/subscriptions`                   | List subscriptions                              |
-| `GET`    | `/api/personal/subscriptions/:id`               | Get subscription detail                         |
-| `POST`   | `/api/personal/subscriptions`                   | Subscribe to a business                         |
-| `DELETE` | `/api/personal/subscriptions/:id`               | Unsubscribe (soft delete)                       |
-| `PATCH`  | `/api/personal/subscriptions/:id/notifications` | Toggle subscription notifications               |
-| `GET`    | `/api/personal/rewards/categories`              | List reward categories                          |
-| `GET`    | `/api/personal/rewards`                         | List rewards (filterable by category)           |
-| `GET`    | `/api/personal/rewards/:id`                     | Get reward detail                               |
-| `POST`   | `/api/personal/rewards/:id/redeem`              | Redeem a reward                                 |
-| `GET`    | `/api/personal/rewards/history`                 | List redemption history                         |
-| `PATCH`  | `/api/personal/rewards/history/:id`             | Update redemption record                        |
-| `DELETE` | `/api/personal/rewards/history/:id`             | Soft delete redemption record                   |
-| `GET`    | `/api/personal/games`                           | Get games feature status                        |
+| Method   | Path                                                | Purpose                                         |
+| -------- | --------------------------------------------------- | ----------------------------------------------- |
+| `GET`    | `/api/personal/profile`                             | Get user profile                                |
+| `PATCH`  | `/api/personal/profile`                             | Update basic info (display_name, username, bio) |
+| `PATCH`  | `/api/personal/profile/contact`                     | Update contact info                             |
+| `PATCH`  | `/api/personal/profile/social`                      | Update social links                             |
+| `GET`    | `/api/personal/profile/interests`                   | List interests                                  |
+| `POST`   | `/api/personal/profile/interests`                   | Add an interest                                 |
+| `DELETE` | `/api/personal/profile/interests/:id`               | Soft delete an interest                         |
+| `GET`    | `/api/personal/dashboard`                           | Get snapshot counts and peeks                   |
+| `GET`    | `/api/personal/activity`                            | List activity feed + stats                      |
+| `DELETE` | `/api/personal/activity/:id`                        | Soft delete an activity                         |
+| `GET`    | `/api/personal/community/feed`                      | Get community message feed                      |
+| `GET`    | `/api/personal/community/discover`                  | Discover communities                            |
+| `GET`    | `/api/personal/community/:id`                       | Get community detail                            |
+| `POST`   | `/api/personal/community/:id/follow`                | Follow a community                              |
+| `DELETE` | `/api/personal/community/:id/follow`                | Unfollow a community                            |
+| `POST`   | `/api/personal/community/:id/membership`            | Join a community                                |
+| `DELETE` | `/api/personal/community/:id/membership`            | Leave a community                               |
+| `GET`    | `/api/personal/community/:id/forum`                 | List forum messages                             |
+| `POST`   | `/api/personal/community/:id/forum`                 | Post a forum message                            |
+| `DELETE` | `/api/personal/community/:id/forum/leave`           | Leave the community forum                       |
+| `POST`   | `/api/personal/community/:id/forum/:messageId/like` | Like a forum message                            |
+| `DELETE` | `/api/personal/community/:id/forum/:messageId/like` | Unlike a forum message                          |
+| `GET`    | `/api/personal/events`                              | List my events                                  |
+| `GET`    | `/api/personal/events/explore`                      | Explore all events                              |
+| `GET`    | `/api/personal/events/:id`                          | Get event detail                                |
+| `POST`   | `/api/personal/events/:id/follow`                   | Follow an event                                 |
+| `DELETE` | `/api/personal/events/:id/follow`                   | Unfollow an event                               |
+| `PATCH`  | `/api/personal/events/:id/interested`               | Toggle interested                               |
+| `PATCH`  | `/api/personal/events/:id/notify`                   | Toggle event date notification                  |
+| `GET`    | `/api/personal/notifications`                       | List notifications                              |
+| `GET`    | `/api/personal/notifications/:id`                   | Get notification detail                         |
+| `PATCH`  | `/api/personal/notifications/:id/read`              | Mark notification as read                       |
+| `DELETE` | `/api/personal/notifications/:id`                   | Soft delete notification                        |
+| `GET`    | `/api/personal/membership/communities`              | Discover communities (membership)               |
+| `GET`    | `/api/personal/membership/communities/mine`         | My joined communities                           |
+| `GET`    | `/api/personal/membership/communities/:id`          | Community detail (membership)                   |
+| `POST`   | `/api/personal/membership/communities/:id/join`     | Join a community                                |
+| `DELETE` | `/api/personal/membership/communities/:id/join`     | Leave a community                               |
+| `GET`    | `/api/personal/membership/events`                   | Browse upcoming events                          |
+| `GET`    | `/api/personal/membership/events/mine`              | My registered/attended events                   |
+| `GET`    | `/api/personal/membership/events/:id`               | Event detail (membership)                       |
+| `POST`   | `/api/personal/membership/events/:id/register`      | Register for an event                           |
+| `DELETE` | `/api/personal/membership/events/:id/register`      | Unregister from an event                        |
+| `GET`    | `/api/personal/subscriptions`                       | List subscriptions                              |
+| `GET`    | `/api/personal/subscriptions/:id`                   | Get subscription detail                         |
+| `POST`   | `/api/personal/subscriptions`                       | Subscribe to a business                         |
+| `DELETE` | `/api/personal/subscriptions/:id`                   | Unsubscribe (soft delete)                       |
+| `PATCH`  | `/api/personal/subscriptions/:id/notifications`     | Toggle subscription notifications               |
+| `GET`    | `/api/personal/rewards/categories`                  | List reward categories                          |
+| `GET`    | `/api/personal/rewards`                             | List rewards (filterable by category)           |
+| `GET`    | `/api/personal/rewards/:id`                         | Get reward detail                               |
+| `POST`   | `/api/personal/rewards/:id/redeem`                  | Redeem a reward                                 |
+| `GET`    | `/api/personal/rewards/history`                     | List redemption history                         |
+| `PATCH`  | `/api/personal/rewards/history/:id`                 | Update redemption record                        |
+| `DELETE` | `/api/personal/rewards/history/:id`                 | Soft delete redemption record                   |
+| `GET`    | `/api/personal/games`                               | Get games feature status                        |

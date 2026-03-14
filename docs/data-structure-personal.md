@@ -138,6 +138,35 @@ Discoverable and joined communities.
 
 ---
 
+## Table: community_forum_messages
+
+Chat messages posted inside a community's forum thread. Seeded with context messages per community; user-sent messages are appended client-side.
+
+| Column       | Type     | Constraints         | Description                  |
+| ------------ | -------- | ------------------- | ---------------------------- |
+| id           | int      | PK                  | Message identifier           |
+| community_id | int      | FK → communities.id | Parent community             |
+| user_id      | uuid     | FK → users.id       | Authenticated author         |
+| author       | string   | NOT NULL            | Display name at time of post |
+| text         | text     | NOT NULL            | Message body                 |
+| likes        | int      | DEFAULT 0           | Aggregate like count         |
+| timestamp    | datetime | NOT NULL            | ISO timestamp of the message |
+| deleted_at   | datetime | NULLABLE            | Soft delete timestamp        |
+
+### community_forum_message_likes (child)
+
+Tracks per-user likes on forum messages to support toggleable like/unlike.
+
+| Column     | Type     | Constraints                      | Description                    |
+| ---------- | -------- | -------------------------------- | ------------------------------ |
+| id         | int      | PK                               | Like record identifier         |
+| message_id | int      | FK → community_forum_messages.id | Liked message                  |
+| user_id    | uuid     | FK → users.id                    | User who liked the message     |
+| created_at | datetime | NOT NULL                         | When the like was created      |
+| deleted_at | datetime | NULLABLE                         | Soft delete timestamp (unlike) |
+
+---
+
 ## Table: events
 
 Events posted by businesses or communities, viewable and trackable by personal users.

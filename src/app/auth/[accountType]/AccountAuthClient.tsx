@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getDashboardPathForRole } from "@/lib/dummy/api";
 import type { AccountType } from "@/lib/dummy/types";
-import { useSignInMutation, useSignUpMutation } from "@/hooks/useDummyApi";
+import { useLoginMutation, useRegisterMutation } from "@/hooks/useDummyApi";
 import { ArrowLeft, Briefcase, Building2, Ticket, User, Users } from "lucide-react";
 
 const allowed = ["personal", "business", "community", "organizer", "agency"] as const;
@@ -62,8 +62,8 @@ function AccountAuthClientInner(props: {
 
   const [mode, setMode] = useState<"login" | "signup">(initialMode);
 
-  const signIn = useSignInMutation();
-  const signUp = useSignUpMutation();
+  const signIn = useLoginMutation();
+  const signUp = useRegisterMutation();
 
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -81,6 +81,7 @@ function AccountAuthClientInner(props: {
   const [organizerType, setOrganizerType] = useState<string>("");
   const [agencyName, setAgencyName] = useState("");
   const [agencyType, setAgencyType] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const isBusy = signIn.isPending || signUp.isPending;
   const afterAuthPath = redirect || getDashboardPathForRole(accountType as AccountType);
@@ -267,6 +268,18 @@ function AccountAuthClientInner(props: {
                     />
                   </div>
 
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      className="h-12 rounded-full px-4"
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </div>
+
                   {accountType === "business" && (
                     <div className="space-y-2">
                       <Label htmlFor="bizDesc">Description (optional)</Label>
@@ -306,30 +319,23 @@ function AccountAuthClientInner(props: {
                     className="h-12 w-full rounded-full"
                     disabled={isBusy || email.trim().length < 3}
                     onClick={async () => {
-                      await signUp.mutateAsync(
-                        accountType === "personal"
-                          ? { accountType, email, displayName }
-                          : accountType === "business"
-                            ? {
-                                accountType,
-                                email,
-                                displayName,
-                                businessName,
-                                industry,
-                                description: businessDescription,
-                              }
-                            : accountType === "community"
-                              ? {
-                                  accountType,
-                                  email,
-                                  displayName,
-                                  communityName,
-                                  approvalRequired,
-                                }
-                              : accountType === "organizer"
-                                ? { accountType, email, displayName, organizerName }
-                                : { accountType, email, displayName, agencyName }
-                      );
+                      const displayNameValue =
+                        accountType === "business"
+                          ? businessName
+                          : accountType === "community"
+                            ? communityName
+                            : accountType === "organizer"
+                              ? organizerName
+                              : accountType === "agency"
+                                ? agencyName
+                                : displayName;
+
+                      await signUp.mutateAsync({
+                        display_name: displayNameValue,
+                        email,
+                        password,
+                        password_confirmation: confirmPassword,
+                      });
                       router.push(afterAuthPath);
                     }}
                   >
@@ -375,7 +381,7 @@ function AccountAuthClientInner(props: {
                     className="h-12 w-full rounded-full"
                     disabled={isBusy || email.trim().length < 3}
                     onClick={async () => {
-                      await signIn.mutateAsync({ email });
+                      await signIn.mutateAsync({ email, password });
                       router.push(afterAuthPath);
                     }}
                   >

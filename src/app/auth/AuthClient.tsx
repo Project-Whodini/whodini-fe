@@ -7,18 +7,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useSessionQuery, useSignInMutation } from "@/hooks/useDummyApi";
+import { useLoginMutation, useSessionQuery } from "@/hooks/useDummyApi";
 import { ArrowLeft, Lock } from "lucide-react";
 
 export function AuthClient({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
   const { data: session } = useSessionQuery();
-  const signIn = useSignInMutation();
+  const signIn = useLoginMutation();
 
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const isBusy = signIn.isPending;
-  const canSubmit = email.trim().length > 3 && !isBusy;
+  const canSubmit = email.trim().length > 3 && password.length > 0 && !isBusy;
 
   const accountTypeLinks = useMemo(
     () => [
@@ -91,6 +92,24 @@ export function AuthClient({ redirectTo }: { redirectTo: string }) {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  className="h-12 rounded-full px-4"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="text-right text-sm">
+                <Link href="/auth/forgot" className="text-muted-foreground hover:text-primary">
+                  Forgot password?
+                </Link>
+              </div>
+
               {signIn.error && (
                 <p className="text-sm text-destructive">{(signIn.error as Error).message}</p>
               )}
@@ -99,7 +118,7 @@ export function AuthClient({ redirectTo }: { redirectTo: string }) {
                 className="h-12 w-full rounded-full"
                 disabled={!canSubmit}
                 onClick={async () => {
-                  await signIn.mutateAsync({ email });
+                  await signIn.mutateAsync({ email, password });
                   router.push(redirectTo);
                 }}
               >

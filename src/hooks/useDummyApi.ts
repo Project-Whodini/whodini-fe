@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCurrentSession, logoutUser } from "@/lib/auth/client";
+import { getCurrentSession, loginWithPassword, logoutUser, registerUser } from "@/lib/auth/client";
 import type { SignUpInput } from "@/lib/dummy/api";
 import {
   approveMembership,
@@ -174,6 +174,26 @@ export function useSignOutMutation() {
     mutationFn: () => logoutUser(),
     onSuccess: async () => {
       await qc.invalidateQueries();
+    },
+  });
+}
+
+export function useLoginMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { email: string; password: string }) => loginWithPassword(input),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.session });
+    },
+  });
+}
+
+export function useRegisterMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: Parameters<typeof registerUser>[0]) => registerUser(input),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: keys.session });
     },
   });
 }

@@ -27,6 +27,7 @@ import {
   Truck,
   Wrench,
   Menu,
+  User,
 } from 'lucide-react';
 import {
   Sheet,
@@ -74,6 +75,7 @@ const ACCOUNT_TYPES = [
 const NAV_ITEMS = {
   personal: [
     { label: 'Overview', href: '/', icon: TrendingUp },
+    { label: 'Profile', href: '/profile', icon: User },
     { label: 'Games', href: '/games', icon: Gamepad2 },
     { label: 'Business & Rewards', href: '/rewards', icon: Gift },
     { label: 'Activity', href: '/activity', icon: Activity },

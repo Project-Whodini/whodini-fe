@@ -1,3 +1,18 @@
+# Whodini — DB Schema Index
+
+This file is an overview index. Each section has been split into its own file under `docs/`.
+
+| Section             | File                                                                 |
+| ------------------- | -------------------------------------------------------------------- |
+| Registration & Auth | [docs/data-structure-auth.md](docs/data-structure-auth.md)           |
+| Personal            | [docs/data-structure-personal.md](docs/data-structure-personal.md)   |
+| Business            | [docs/data-structure-business.md](docs/data-structure-business.md)   |
+| Community           | [docs/data-structure-community.md](docs/data-structure-community.md) |
+| Organizer           | [docs/data-structure-organizer.md](docs/data-structure-organizer.md) |
+| Agency              | [docs/data-structure-agency.md](docs/data-structure-agency.md)       |
+
+---
+
 # Whodini — Personal Section DB Schema
 
 > Derived from the mock/static data structures used across `src/app/personal/**`.

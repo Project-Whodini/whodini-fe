@@ -1,4 +1,4 @@
-import { AuthClient } from "@/app/auth/AuthClient";
+import { redirect } from "next/navigation";
 
 export default function AuthIndexPage({
   searchParams,
@@ -6,6 +6,5 @@ export default function AuthIndexPage({
   searchParams?: { redirect?: string };
 }) {
   const redirectTo = searchParams?.redirect || "/dashboard";
-  return <AuthClient redirectTo={redirectTo} />;
+  redirect(`/?redirect=${encodeURIComponent(redirectTo)}`);
 }
-

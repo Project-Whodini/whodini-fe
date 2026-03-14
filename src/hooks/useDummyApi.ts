@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCurrentSession, logoutUser } from "@/lib/auth/client";
 import type { SignUpInput } from "@/lib/dummy/api";
 import {
   approveMembership,
@@ -20,12 +21,10 @@ import {
   getMyNotifications,
   getMyRegistrations,
   getMySubscriptions,
-  getSession,
   markCommunityMessageRead,
   registerForEvent,
   setActiveRoleIndex,
   signIn,
-  signOut,
   signUp,
   subscribeToBrand,
   joinCommunity,
@@ -51,7 +50,7 @@ const keys = {
 export function useSessionQuery() {
   return useQuery({
     queryKey: keys.session,
-    queryFn: getSession,
+    queryFn: getCurrentSession,
   });
 }
 
@@ -172,7 +171,7 @@ export function useSignUpMutation() {
 export function useSignOutMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: () => logoutUser(),
     onSuccess: async () => {
       await qc.invalidateQueries();
     },
@@ -277,4 +276,3 @@ export function useCreateEventMutation() {
     },
   });
 }
-

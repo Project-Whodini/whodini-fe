@@ -43,7 +43,7 @@ export function AppHeader() {
         <div className="flex items-center gap-2">
           {!session ? (
             <Button asChild>
-              <Link href={`/auth?redirect=${encodeURIComponent(pathname || "/dashboard")}`}>Sign in</Link>
+              <Link href={`/?redirect=${encodeURIComponent(pathname || "/dashboard")}`}>Sign in</Link>
             </Button>
           ) : (
             <DropdownMenu>
@@ -108,4 +108,3 @@ export function AppHeader() {
     </header>
   );
 }
-

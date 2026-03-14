@@ -16,9 +16,11 @@ import SideBar from '@/components/app/SideBar';
 
 // Personal pages
 import PersonalPage from '../personal/page';
+import ProfilePage from '../personal/profile/page';
 import ActivityPage from '../personal/activity/page';
 import CommunityPage from '../personal/community/page';
 import CommunityShowPage from '../personal/community/show';
+import CommunityForumPage from '../personal/community/furom';
 import EventsPage from '../personal/events/page';
 import ExploreEventsPage from '../personal/events/explore/page';
 import GamesPage from '../personal/games/page';
@@ -124,6 +126,7 @@ export default function DashboardPage() {
     // Personal Account
     '/': () => <PersonalPage />,
     '/home': () => <PersonalPage />,
+    '/profile': () => <ProfilePage />,
     '/games': () => <GamesPage />,
     '/rewards': () => <RewardsPage />,
     '/activity': () => <ActivityPage />,
@@ -133,6 +136,7 @@ export default function DashboardPage() {
     '/notifications/show': () => <NotificationShowPage />,
     '/community': () => <CommunityPage />,
     '/community/show': () => <CommunityShowPage />,
+    '/community/forum': () => <CommunityForumPage />,
     '/memberships': () => <MembershipsPage />,
     '/subscriptions': () => <SubscriptionsPage />,
 

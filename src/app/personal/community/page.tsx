@@ -177,6 +177,29 @@ export default function CommunityPage() {
     );
   };
 
+  const openCommunityForum = (message: (typeof mockData.messages)[0]) => {
+    sessionStorage.setItem(
+      'whodini:selected-forum',
+      JSON.stringify({
+        communityName: message.community,
+        communityImage: message.image,
+        incomingMessage: {
+          author: message.author,
+          text: message.message,
+          timestamp: message.timestamp,
+          likes: message.likes,
+          isOwn: false,
+        },
+      })
+    );
+    window.dispatchEvent(
+      new CustomEvent('whodini:navigate', {
+        detail: { path: '/community/forum' },
+        cancelable: true,
+      })
+    );
+  };
+
   const openCommunityProfile = (community: (typeof discoverCommunities)[0]) => {
     sessionStorage.setItem(
       'whodini:selected-community',
@@ -237,7 +260,8 @@ export default function CommunityPage() {
         {mockData.messages.map((message) => (
           <Card
             key={message.id}
-            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
+            className="border border-neutral-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => openCommunityForum(message)}
           >
             <CardHeader className="pb-3 sm:pb-4">
               <div className="flex items-start gap-3 sm:gap-4">

@@ -19,7 +19,7 @@ export function RequireSession({ children }: { children: React.ReactNode }) {
     if (isLoading) return;
     if (!session) {
       const redirect = pathname || "/dashboard";
-      router.replace(`/auth?redirect=${encodeURIComponent(redirect)}`);
+      router.replace(`/?redirect=${encodeURIComponent(redirect)}`);
     }
   }, [disableAuth, isLoading, pathname, router, session]);
 

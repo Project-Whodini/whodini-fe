@@ -7,10 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
-import appleLogo from '@/assets/apple.svg';
-import facebookLogo from '@/assets/facebook.svg';
 import googleLogo from '@/assets/google.svg';
-import { createUser, type AccountType } from '@/lib/indexeddb/auth';
+import { registerUser } from '@/lib/auth/client';
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -22,24 +20,6 @@ export default function RegisterPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [accountTypes, setAccountTypes] = useState({
-    personal: true,
-    business: false,
-    community: false,
-    organizer: false,
-    agency: false,
-  });
-
-  const handleAccountTypeChange = (type: keyof typeof accountTypes) => {
-    // Prevent unchecking personal account type
-    if (type === 'personal') return;
-
-    setAccountTypes((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -50,20 +30,16 @@ export default function RegisterPage() {
       return;
     }
 
-    const selectedAccountTypes = Object.entries(accountTypes)
-      .filter(([, selected]) => selected)
-      .map(([key]) => key as AccountType);
-
     setIsSaving(true);
     try {
-      await createUser({
-        name,
+      await registerUser({
+        display_name: name,
         email,
         password,
-        accountTypes: selectedAccountTypes,
+        password_confirmation: confirmPassword,
       });
-      setSuccess('Account saved locally');
-      router.push('/');
+      setSuccess('Account created successfully');
+      router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
@@ -174,42 +150,10 @@ export default function RegisterPage() {
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-neutral-700 block mb-2">
-                    Account Types
+                    Account Type
                   </label>
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                    {[
-                      { key: 'personal', label: 'Personal' },
-                      { key: 'business', label: 'Business' },
-                      { key: 'community', label: 'Community' },
-                      { key: 'organizer', label: 'Event' },
-                      { key: 'agency', label: 'Agency' },
-                    ].map(({ key, label }) => (
-                      <div
-                        key={key}
-                        className="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg border border-neutral-200 hover:border-neutral-300 transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          id={key}
-                          checked={
-                            accountTypes[key as keyof typeof accountTypes]
-                          }
-                          onChange={() =>
-                            handleAccountTypeChange(
-                              key as keyof typeof accountTypes
-                            )
-                          }
-                          disabled={key === 'personal'}
-                          className={`w-4 h-4 text-[#ff5f6d] border-neutral-300 rounded focus:ring-[#ff5f6d] focus:ring-2 ${key === 'personal' ? 'cursor-not-allowed' : ''}`}
-                        />
-                        <label
-                          htmlFor={key}
-                          className="text-sm font-medium text-neutral-900 cursor-pointer"
-                        >
-                          {label}
-                        </label>
-                      </div>
-                    ))}
+                  <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-700">
+                    Personal
                   </div>
                 </div>
               </div>

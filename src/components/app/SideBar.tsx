@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Calendar,
   Users,
@@ -43,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useSignOutMutation } from '@/hooks/useDummyApi';
 
 const ACCOUNT_TYPES = [
   {
@@ -153,6 +155,8 @@ export default function SideBar({
   expanded: controlledExpanded,
   onExpandedChange,
 }: SideBarProps) {
+  const router = useRouter();
+  const signOut = useSignOutMutation();
   const [uncontrolledExpanded, setUncontrolledExpanded] = useState(true);
   const expanded = controlledExpanded ?? uncontrolledExpanded;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -198,6 +202,11 @@ export default function SideBar({
       );
     };
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut.mutateAsync();
+    router.push('/');
+  };
 
   return (
     <>
@@ -273,6 +282,7 @@ export default function SideBar({
                   <button
                     type="button"
                     title="Sign out"
+                    onClick={handleSignOut}
                     className="w-full flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition py-2.5 gap-2"
                   >
                     <LogOut className="w-5 h-5 shrink-0" aria-hidden />
@@ -409,6 +419,7 @@ export default function SideBar({
           <button
             type="button"
             title="Sign out"
+            onClick={handleSignOut}
             className={`flex items-center justify-center bg-white/20 text-white font-semibold rounded-xl shadow-md border border-white/30 hover:bg-white/30 transition ${
               expanded ? 'w-full py-2 gap-2' : 'w-10 h-10'
             }`}

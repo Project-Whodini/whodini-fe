@@ -6,12 +6,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import appleLogo from '@/assets/apple.svg';
-import facebookLogo from '@/assets/facebook.svg';
 import googleLogo from '@/assets/google.svg';
-import { signInWithEmailPassword } from '@/lib/indexeddb/auth';
-import { writeSession } from '@/lib/dummy/storage';
-import type { Session } from '@/lib/dummy/types';
+import { loginWithPassword } from '@/lib/auth/client';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,23 +22,7 @@ export default function LoginPage() {
 
     setIsSigningIn(true);
     try {
-      // Demo mode: Allow any credentials to proceed
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
-
-      const session: Session = {
-        userId: 'demo-user-id',
-        email: email || 'demo@example.com',
-        displayName: 'Demo User',
-        roles: [
-          {
-            accountType: 'personal',
-            accountId: 'demo-user-id',
-            label: 'Personal',
-          },
-        ],
-        activeRoleIndex: 0,
-      };
-      writeSession(session);
+      await loginWithPassword({ email, password });
       router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign in');
